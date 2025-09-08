@@ -215,6 +215,15 @@ class MetWeather(SingleCoordinatorWeatherEntity[MetDataUpdateCoordinator]):
             ATTR_MAP[ATTR_WEATHER_UV_INDEX]
         )
 
+    @property
+    def extra_state_attributes(self) -> dict[str, str]:
+        """Return extra attributes."""
+        return {
+            "temperature_kelvin": str(round(self.native_temperature + 273.15, 2))
+            if self.native_temperature
+            else "N/A"
+        }
+
     def _forecast(self, hourly: bool) -> list[Forecast] | None:
         """Return the forecast array."""
         if hourly:
