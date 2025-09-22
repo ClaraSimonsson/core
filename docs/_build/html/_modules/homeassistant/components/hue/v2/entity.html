@@ -1,0 +1,366 @@
+<!doctype html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      homeassistant.components.hue.v2.entity &mdash; homeassistant documentation
+    </title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/pygments.css?v=b86133f3"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/css/theme.css?v=e59714d7"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/graphviz.css?v=4ae1632d"
+    />
+
+    <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  </head>
+
+  <body class="wy-body-for-nav">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../../index.html" class="icon icon-home">
+              homeassistant
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+            </div>
+          </div>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <p class="caption" role="heading">
+              <span class="caption-text">Contents:</span>
+            </p>
+            <ul>
+              <li class="toctree-l1">
+                <a
+                  class="reference internal"
+                  href="../../../../../autoapi/homeassistant/components/hue/index.html"
+                  >homeassistant.components.hue</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">homeassistant</a>
+        </nav>
+
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="Page navigation">
+              <ul class="wy-breadcrumbs">
+                <li>
+                  <a
+                    href="../../../../../index.html"
+                    class="icon icon-home"
+                    aria-label="Home"
+                  ></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../../../index.html">Module code</a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../hue.html">homeassistant.components.hue</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  homeassistant.components.hue.v2.entity
+                </li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div itemprop="articleBody">
+                <h1>Source code for homeassistant.components.hue.v2.entity</h1>
+                <div class="highlight">
+                  <pre>
+<span></span><span class="sd">&quot;&quot;&quot;Generic Hue Entity Model.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.controllers.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseResourcesController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.controllers.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.resource</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResourceTypes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.zigbee_connectivity</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConnectivityServiceStatus</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">callback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">entity_registry</span> <span class="k">as</span> <span class="n">er</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.device_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceInfo</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.entity</span><span class="w"> </span><span class="kn">import</span> <span class="n">Entity</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..bridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBridge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..const</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONF_IGNORE_AVAILABILITY</span><span class="p">,</span> <span class="n">DOMAIN</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.device_power</span><span class="w"> </span><span class="kn">import</span> <span class="n">DevicePower</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.grouped_light</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupedLight</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.light</span><span class="w"> </span><span class="kn">import</span> <span class="n">Light</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.light_level</span><span class="w"> </span><span class="kn">import</span> <span class="n">LightLevel</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.motion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Motion</span>
+
+    <span class="nb">type</span> <span class="n">HueResource</span> <span class="o">=</span> <span class="n">Light</span> <span class="o">|</span> <span class="n">DevicePower</span> <span class="o">|</span> <span class="n">GroupedLight</span> <span class="o">|</span> <span class="n">LightLevel</span> <span class="o">|</span> <span class="n">Motion</span>
+
+
+<span class="n">RESOURCE_TYPE_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># a simple mapping of hue resource type to Hass name</span>
+    <span class="n">ResourceTypes</span><span class="o">.</span><span class="n">LIGHT_LEVEL</span><span class="p">:</span> <span class="s2">&quot;Illuminance&quot;</span><span class="p">,</span>
+    <span class="n">ResourceTypes</span><span class="o">.</span><span class="n">DEVICE_POWER</span><span class="p">:</span> <span class="s2">&quot;Battery&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="HueBaseEntity">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/entity/index.html#homeassistant.components.hue.v2.entity.HueBaseEntity">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HueBaseEntity</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>  <span class="c1"># pylint: disable=hass-enforce-class-module</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic Entity Class for a Hue resource.&quot;&quot;&quot;</span>
+
+    <span class="n">_attr_should_poll</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">bridge</span><span class="p">:</span> <span class="n">HueBridge</span><span class="p">,</span>
+        <span class="n">controller</span><span class="p">:</span> <span class="n">BaseResourcesController</span><span class="p">,</span>
+        <span class="n">resource</span><span class="p">:</span> <span class="n">HueResource</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a generic Hue resource entity.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span> <span class="o">=</span> <span class="n">bridge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource</span> <span class="o">=</span> <span class="n">resource</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">bridge</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Entity class attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr_unique_id</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">id</span>
+        <span class="c1"># device is precreated in main handler</span>
+        <span class="c1"># this attaches the entity to the precreated device</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># attach all device-less entities to the bridge itself</span>
+            <span class="c1"># e.g. config based sensors like entertainment area</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_device_info</span> <span class="o">=</span> <span class="n">DeviceInfo</span><span class="p">(</span>
+                <span class="n">identifiers</span><span class="o">=</span><span class="p">{(</span><span class="n">DOMAIN</span><span class="p">,</span> <span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">bridge_id</span><span class="p">)},</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_device_info</span> <span class="o">=</span> <span class="n">DeviceInfo</span><span class="p">(</span>
+                <span class="n">identifiers</span><span class="o">=</span><span class="p">{(</span><span class="n">DOMAIN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">id</span><span class="p">)},</span>
+            <span class="p">)</span>
+        <span class="c1"># used for availability workaround</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_availability</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="HueBaseEntity.async_added_to_hass">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/entity/index.html#homeassistant.components.hue.v2.entity.HueBaseEntity.async_added_to_hass">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_added_to_hass</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call when entity is added.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_availability</span><span class="p">()</span>
+        <span class="c1"># Add value_changed callbacks.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">async_on_remove</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_handle_event</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_UPDATED</span><span class="p">,</span> <span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_DELETED</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># also subscribe to device update event to catch device changes (e.g. name)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">async_on_remove</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_handle_event</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_UPDATED</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># subscribe to zigbee_connectivity to catch availability changes</span>
+        <span class="k">if</span> <span class="n">zigbee</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">get_zigbee_connectivity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">id</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">async_on_remove</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">zigbee_connectivity</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_handle_event</span><span class="p">,</span>
+                    <span class="n">zigbee</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_UPDATED</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return entity availability.&quot;&quot;&quot;</span>
+        <span class="c1"># entities without a device attached should be always available</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1"># the zigbee connectivity sensor itself should be always available</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ResourceTypes</span><span class="o">.</span><span class="n">ZIGBEE_CONNECTIVITY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_availability</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1"># all device-attached entities get availability from the zigbee connectivity</span>
+        <span class="k">if</span> <span class="n">zigbee</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">get_zigbee_connectivity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">id</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">zigbee</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">ConnectivityServiceStatus</span><span class="o">.</span><span class="n">CONNECTED</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="HueBaseEntity.on_update">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/entity/index.html#homeassistant.components.hue.v2.entity.HueBaseEntity.on_update">[docs]</a>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call on update event.&quot;&quot;&quot;</span></div>
+
+        <span class="c1"># used in subclasses</span>
+
+<div class="viewcode-block" id="HueBaseEntity._handle_event">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/entity/index.html#homeassistant.components.hue.v2.entity.HueBaseEntity._handle_event">[docs]</a>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="n">EventType</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">HueResource</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle status event for this resource (or it&#39;s parent).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event_type</span> <span class="o">==</span> <span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_DELETED</span><span class="p">:</span>
+            <span class="c1"># cleanup entities that are not strictly device-bound and have the bridge as parent</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">resource</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                <span class="n">ent_reg</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">async_get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hass</span><span class="p">)</span>
+                <span class="n">ent_reg</span><span class="o">.</span><span class="n">async_remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_id</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received status update for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_availability</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">async_write_ha_state</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="HueBaseEntity._check_availability">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/entity/index.html#homeassistant.components.hue.v2.entity.HueBaseEntity._check_availability">[docs]</a>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_availability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check availability of the device.&quot;&quot;&quot;</span>
+        <span class="c1"># return if we already processed this entity</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_availability</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># only do the availability check for entities connected to a device (with `on` feature)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_availability</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span>
+        <span class="c1"># ignore availability if user added device to ignore list</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">config_entry</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">CONF_IGNORE_AVAILABILITY</span><span class="p">,</span> <span class="p">[]</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_availability</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Device </span><span class="si">%s</span><span class="s2"> is configured to ignore availability status. &quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+        <span class="c1"># certified products (normally) report their state correctly</span>
+        <span class="c1"># no need for workaround/reporting</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">product_data</span><span class="o">.</span><span class="n">certified</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_availability</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span>
+        <span class="c1"># some (3th party) Hue lights report their connection status incorrectly</span>
+        <span class="c1"># causing the zigbee availability to report as disconnected while in fact</span>
+        <span class="c1"># it can be controlled. If the light is reported unavailable</span>
+        <span class="c1"># by the zigbee connectivity but the state changes its considered as a</span>
+        <span class="c1"># malfunctioning device and we report it.</span>
+        <span class="c1"># While the user should actually fix this issue, we allow to</span>
+        <span class="c1"># ignore the availability for this light/device from the config options.</span>
+        <span class="n">cur_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">on</span><span class="o">.</span><span class="n">on</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="o">=</span> <span class="n">cur_state</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">zigbee</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">get_zigbee_connectivity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">id</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="o">!=</span> <span class="n">cur_state</span>
+                <span class="ow">and</span> <span class="n">zigbee</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">ConnectivityServiceStatus</span><span class="o">.</span><span class="n">CONNECTED</span>
+            <span class="p">):</span>
+                <span class="c1"># the device state changed from on-&gt;off or off-&gt;on</span>
+                <span class="c1"># while it was reported as not connected!</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="s2">&quot;Device </span><span class="si">%s</span><span class="s2"> changed state while reported as disconnected. This&quot;</span>
+                        <span class="s2">&quot; might be an indicator that routing is not working for this&quot;</span>
+                        <span class="s2">&quot; device or the device is having connectivity issues. You can&quot;</span>
+                        <span class="s2">&quot; disable availability reporting for this device in the Hue&quot;</span>
+                        <span class="s2">&quot; options. Device details: </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) fw: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                    <span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">product_data</span><span class="o">.</span><span class="n">manufacturer_name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">product_data</span><span class="o">.</span><span class="n">product_name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">product_data</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">product_data</span><span class="o">.</span><span class="n">software_version</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># set attribute to false because we only want to log once per light/device.</span>
+                <span class="c1"># a user must opt-in to ignore availability through integration options</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_availability</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_state</span> <span class="o">=</span> <span class="n">cur_state</span></div>
+</div>
+
+</pre>
+                </div>
+              </div>
+            </div>
+            <footer>
+              <hr />
+
+              <div role="contentinfo">
+                <p>&#169; Copyright 2025, Clara Simonsson.</p>
+              </div>
+
+              Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using
+              a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme"
+                >theme</a
+              >
+              provided by <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
+    </script>
+  </body>
+</html>

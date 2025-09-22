@@ -1,0 +1,145 @@
+homeassistant.components.hue.v2.group
+=====================================
+
+.. py:module:: homeassistant.components.hue.v2.group
+
+.. autoapi-nested-parse::
+
+   Support for Hue groups (room/zone).
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.group.GroupedHueLight
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.group.async_setup_entry
+
+
+Module Contents
+---------------
+
+.. py:function:: async_setup_entry(hass: homeassistant.core.HomeAssistant, config_entry: homeassistant.components.hue.bridge.HueConfigEntry, async_add_entities: homeassistant.helpers.entity_platform.AddConfigEntryEntitiesCallback) -> None
+   :async:
+
+
+   Set up Hue groups on light platform.
+
+
+.. py:class:: GroupedHueLight(bridge: homeassistant.components.hue.bridge.HueBridge, resource: aiohue.v2.controllers.groups.GroupedLight, group: aiohue.v2.controllers.groups.Room | aiohue.v2.controllers.groups.Zone)
+
+   Bases: :py:obj:`homeassistant.components.hue.v2.entity.HueBaseEntity`, :py:obj:`homeassistant.components.light.LightEntity`
+
+
+   Representation of a Grouped Hue light.
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:attribute:: resource
+
+
+   .. py:attribute:: group
+
+
+   .. py:attribute:: controller
+
+
+   .. py:attribute:: api
+      :type:  aiohue.v2.HueBridgeV2
+
+
+   .. py:attribute:: _restore_brightness
+      :type:  float | None
+      :value: None
+
+
+
+   .. py:attribute:: _brightness_pct
+      :type:  float
+      :value: 0
+
+
+
+   .. py:attribute:: _attr_device_info
+
+
+   .. py:attribute:: _dynamic_mode_active
+      :value: False
+
+
+
+   .. py:method:: async_added_to_hass() -> None
+      :async:
+
+
+      Call when entity is added.
+
+
+
+   .. py:property:: is_on
+      :type: bool
+
+
+      Return true if light is on.
+
+
+   .. py:property:: extra_state_attributes
+      :type: dict[str, Any] | None
+
+
+      Return the optional state attributes.
+
+
+   .. py:method:: async_turn_on(**kwargs: Any) -> None
+      :async:
+
+
+      Turn the grouped_light on.
+
+
+
+   .. py:method:: async_turn_off(**kwargs: Any) -> None
+      :async:
+
+
+      Turn the light off.
+
+
+
+   .. py:method:: async_set_flash(flash: str) -> None
+      :async:
+
+
+      Send flash command to light.
+
+
+
+   .. py:method:: on_update() -> None
+
+      Call on update event.
+
+
+
+   .. py:method:: _update_values() -> None
+
+      Set base values from underlying lights of a group.
+
+
+
+   .. py:method:: _get_names_and_entity_ids_for_resource_ids(resource_ids: tuple[str]) -> tuple[set[str], set[str]]
+
+      Return the names and entity ids for the given Hue (light) resource IDs.
+
+
+

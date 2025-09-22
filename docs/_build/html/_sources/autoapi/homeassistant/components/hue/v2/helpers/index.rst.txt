@@ -1,0 +1,39 @@
+homeassistant.components.hue.v2.helpers
+=======================================
+
+.. py:module:: homeassistant.components.hue.v2.helpers
+
+.. autoapi-nested-parse::
+
+   Helper functions for Philips Hue v2.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.helpers.normalize_hue_brightness
+   homeassistant.components.hue.v2.helpers.normalize_hue_transition
+   homeassistant.components.hue.v2.helpers.normalize_hue_colortemp
+
+
+Module Contents
+---------------
+
+.. py:function:: normalize_hue_brightness(brightness: float | None) -> float | None
+
+   Return calculated brightness values.
+
+
+.. py:function:: normalize_hue_transition(transition: float | None) -> float | None
+
+   Return rounded transition values.
+
+
+.. py:function:: normalize_hue_colortemp(colortemp_k: int | None) -> int | None
+
+   Return color temperature within Hue's ranges.
+
+

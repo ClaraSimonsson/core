@@ -1,0 +1,70 @@
+homeassistant.components.hue.v1.binary_sensor
+=============================================
+
+.. py:module:: homeassistant.components.hue.v1.binary_sensor
+
+.. autoapi-nested-parse::
+
+   Hue binary sensor entities.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.binary_sensor.PRESENCE_NAME_FORMAT
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.binary_sensor.HuePresence
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.binary_sensor.async_setup_entry
+
+
+Module Contents
+---------------
+
+.. py:data:: PRESENCE_NAME_FORMAT
+   :value: '{} motion'
+
+
+.. py:function:: async_setup_entry(hass: homeassistant.core.HomeAssistant, config_entry: homeassistant.components.hue.bridge.HueConfigEntry, async_add_entities: homeassistant.helpers.entity_platform.AddConfigEntryEntitiesCallback) -> None
+   :async:
+
+
+   Defer binary sensor setup to the shared sensor module.
+
+
+.. py:class:: HuePresence(sensor, name, bridge, primary_sensor=None)
+
+   Bases: :py:obj:`homeassistant.components.hue.v1.sensor_base.GenericZLLSensor`, :py:obj:`homeassistant.components.binary_sensor.BinarySensorEntity`
+
+
+   The presence sensor entity for a Hue motion sensor device.
+
+
+   .. py:attribute:: _attr_device_class
+
+
+   .. py:property:: is_on
+
+      Return true if the binary sensor is on.
+
+
+   .. py:property:: extra_state_attributes
+
+      Return the device state attributes.
+
+

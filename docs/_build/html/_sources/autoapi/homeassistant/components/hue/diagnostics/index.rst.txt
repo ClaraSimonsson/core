@@ -1,0 +1,29 @@
+homeassistant.components.hue.diagnostics
+========================================
+
+.. py:module:: homeassistant.components.hue.diagnostics
+
+.. autoapi-nested-parse::
+
+   Diagnostics support for Hue.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.diagnostics.async_get_config_entry_diagnostics
+
+
+Module Contents
+---------------
+
+.. py:function:: async_get_config_entry_diagnostics(hass: homeassistant.core.HomeAssistant, entry: homeassistant.components.hue.bridge.HueConfigEntry) -> dict[str, Any]
+   :async:
+
+
+   Return diagnostics for a config entry.
+
+

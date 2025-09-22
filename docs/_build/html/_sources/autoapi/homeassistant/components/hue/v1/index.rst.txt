@@ -1,0 +1,27 @@
+homeassistant.components.hue.v1
+===============================
+
+.. py:module:: homeassistant.components.hue.v1
+
+.. autoapi-nested-parse::
+
+   Hue V1 API specific platform implementation.
+
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/homeassistant/components/hue/v1/binary_sensor/index
+   /autoapi/homeassistant/components/hue/v1/device_trigger/index
+   /autoapi/homeassistant/components/hue/v1/helpers/index
+   /autoapi/homeassistant/components/hue/v1/hue_event/index
+   /autoapi/homeassistant/components/hue/v1/light/index
+   /autoapi/homeassistant/components/hue/v1/sensor/index
+   /autoapi/homeassistant/components/hue/v1/sensor_base/index
+   /autoapi/homeassistant/components/hue/v1/sensor_device/index
+
+

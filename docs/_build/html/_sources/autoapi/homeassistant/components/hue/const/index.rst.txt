@@ -1,0 +1,133 @@
+homeassistant.components.hue.const
+==================================
+
+.. py:module:: homeassistant.components.hue.const
+
+.. autoapi-nested-parse::
+
+   Constants for the Hue component.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.const.DOMAIN
+   homeassistant.components.hue.const.CONF_IGNORE_AVAILABILITY
+   homeassistant.components.hue.const.CONF_SUBTYPE
+   homeassistant.components.hue.const.ATTR_HUE_EVENT
+   homeassistant.components.hue.const.SERVICE_HUE_ACTIVATE_SCENE
+   homeassistant.components.hue.const.ATTR_GROUP_NAME
+   homeassistant.components.hue.const.ATTR_SCENE_NAME
+   homeassistant.components.hue.const.ATTR_TRANSITION
+   homeassistant.components.hue.const.ATTR_DYNAMIC
+   homeassistant.components.hue.const.GROUP_TYPE_LIGHT_GROUP
+   homeassistant.components.hue.const.GROUP_TYPE_ROOM
+   homeassistant.components.hue.const.GROUP_TYPE_LUMINAIRE
+   homeassistant.components.hue.const.GROUP_TYPE_LIGHT_SOURCE
+   homeassistant.components.hue.const.GROUP_TYPE_ZONE
+   homeassistant.components.hue.const.GROUP_TYPE_ENTERTAINMENT
+   homeassistant.components.hue.const.CONF_ALLOW_HUE_GROUPS
+   homeassistant.components.hue.const.DEFAULT_ALLOW_HUE_GROUPS
+   homeassistant.components.hue.const.CONF_ALLOW_UNREACHABLE
+   homeassistant.components.hue.const.DEFAULT_ALLOW_UNREACHABLE
+   homeassistant.components.hue.const.REQUEST_REFRESH_DELAY
+   homeassistant.components.hue.const.DEFAULT_BUTTON_EVENT_TYPES
+   homeassistant.components.hue.const.DEFAULT_ROTARY_EVENT_TYPES
+   homeassistant.components.hue.const.DEFAULT_ROTARY_EVENT_SUBTYPES
+   homeassistant.components.hue.const.DEVICE_SPECIFIC_EVENT_TYPES
+
+
+Module Contents
+---------------
+
+.. py:data:: DOMAIN
+   :value: 'hue'
+
+
+.. py:data:: CONF_IGNORE_AVAILABILITY
+   :value: 'ignore_availability'
+
+
+.. py:data:: CONF_SUBTYPE
+   :value: 'subtype'
+
+
+.. py:data:: ATTR_HUE_EVENT
+   :value: 'hue_event'
+
+
+.. py:data:: SERVICE_HUE_ACTIVATE_SCENE
+   :value: 'hue_activate_scene'
+
+
+.. py:data:: ATTR_GROUP_NAME
+   :value: 'group_name'
+
+
+.. py:data:: ATTR_SCENE_NAME
+   :value: 'scene_name'
+
+
+.. py:data:: ATTR_TRANSITION
+   :value: 'transition'
+
+
+.. py:data:: ATTR_DYNAMIC
+   :value: 'dynamic'
+
+
+.. py:data:: GROUP_TYPE_LIGHT_GROUP
+   :value: 'LightGroup'
+
+
+.. py:data:: GROUP_TYPE_ROOM
+   :value: 'Room'
+
+
+.. py:data:: GROUP_TYPE_LUMINAIRE
+   :value: 'Luminaire'
+
+
+.. py:data:: GROUP_TYPE_LIGHT_SOURCE
+   :value: 'LightSource'
+
+
+.. py:data:: GROUP_TYPE_ZONE
+   :value: 'Zone'
+
+
+.. py:data:: GROUP_TYPE_ENTERTAINMENT
+   :value: 'Entertainment'
+
+
+.. py:data:: CONF_ALLOW_HUE_GROUPS
+   :value: 'allow_hue_groups'
+
+
+.. py:data:: DEFAULT_ALLOW_HUE_GROUPS
+   :value: False
+
+
+.. py:data:: CONF_ALLOW_UNREACHABLE
+   :value: 'allow_unreachable'
+
+
+.. py:data:: DEFAULT_ALLOW_UNREACHABLE
+   :value: False
+
+
+.. py:data:: REQUEST_REFRESH_DELAY
+   :value: 0.3
+
+
+.. py:data:: DEFAULT_BUTTON_EVENT_TYPES
+
+.. py:data:: DEFAULT_ROTARY_EVENT_TYPES
+
+.. py:data:: DEFAULT_ROTARY_EVENT_SUBTYPES
+
+.. py:data:: DEVICE_SPECIFIC_EVENT_TYPES
+

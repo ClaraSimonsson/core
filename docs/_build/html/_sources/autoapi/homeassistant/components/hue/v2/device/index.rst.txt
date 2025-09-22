@@ -1,0 +1,29 @@
+homeassistant.components.hue.v2.device
+======================================
+
+.. py:module:: homeassistant.components.hue.v2.device
+
+.. autoapi-nested-parse::
+
+   Handles Hue resource of type `device` mapping to Home Assistant device.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.device.async_setup_devices
+
+
+Module Contents
+---------------
+
+.. py:function:: async_setup_devices(bridge: homeassistant.components.hue.bridge.HueBridge)
+   :async:
+
+
+   Manage setup of devices from Hue devices.
+
+

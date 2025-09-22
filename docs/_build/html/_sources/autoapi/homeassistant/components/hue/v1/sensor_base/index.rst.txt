@@ -1,0 +1,158 @@
+homeassistant.components.hue.v1.sensor_base
+===========================================
+
+.. py:module:: homeassistant.components.hue.v1.sensor_base
+
+.. autoapi-nested-parse::
+
+   Support for the Philips Hue sensors as a platform.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.sensor_base.SENSOR_CONFIG_MAP
+   homeassistant.components.hue.v1.sensor_base.LOGGER
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.sensor_base.SensorManager
+   homeassistant.components.hue.v1.sensor_base.GenericHueSensor
+   homeassistant.components.hue.v1.sensor_base.GenericZLLSensor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.sensor_base._device_id
+
+
+Module Contents
+---------------
+
+.. py:data:: SENSOR_CONFIG_MAP
+   :type:  dict[str, Any]
+
+.. py:data:: LOGGER
+
+.. py:function:: _device_id(aiohue_sensor)
+
+.. py:class:: SensorManager(bridge)
+
+   Class that handles registering and updating Hue sensor entities.
+
+   Intended to be a singleton.
+
+
+   .. py:attribute:: SCAN_INTERVAL
+
+
+   .. py:attribute:: bridge
+
+
+   .. py:attribute:: _component_add_entities
+
+
+   .. py:attribute:: current
+
+
+   .. py:attribute:: current_events
+
+
+   .. py:attribute:: _enabled_platforms
+      :value: ('binary_sensor', 'sensor')
+
+
+
+   .. py:attribute:: coordinator
+
+
+   .. py:method:: async_update_data()
+      :async:
+
+
+      Update sensor data.
+
+
+
+   .. py:method:: async_register_component(platform, async_add_entities)
+      :async:
+
+
+      Register async_add_entities methods for components.
+
+
+
+   .. py:method:: async_update_items()
+
+      Update sensors from the bridge.
+
+
+
+.. py:class:: GenericHueSensor(sensor, name, bridge, primary_sensor=None)
+
+   Bases: :py:obj:`homeassistant.components.hue.v1.sensor_device.GenericHueDevice`, :py:obj:`homeassistant.helpers.entity.Entity`
+
+
+   Representation of a Hue sensor.
+
+
+   .. py:attribute:: should_poll
+      :value: False
+
+
+      Return True if entity has to be polled for state.
+
+      False if entity pushes its state to HA.
+
+
+   .. py:property:: available
+
+      Return if sensor is available.
+
+
+   .. py:property:: state_class
+
+      Return the state class of this entity, from STATE_CLASSES, if any.
+
+
+   .. py:method:: async_added_to_hass()
+      :async:
+
+
+      When entity is added to hass.
+
+
+
+   .. py:method:: async_update()
+      :async:
+
+
+      Update the entity.
+
+      Only used by the generic entity update service.
+
+
+
+.. py:class:: GenericZLLSensor(sensor, name, bridge, primary_sensor=None)
+
+   Bases: :py:obj:`GenericHueSensor`
+
+
+   Representation of a Hue-brand, physical sensor.
+
+
+   .. py:property:: extra_state_attributes
+
+      Return the device state attributes.
+
+

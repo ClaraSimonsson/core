@@ -1,0 +1,194 @@
+homeassistant.components.hue.config_flow
+========================================
+
+.. py:module:: homeassistant.components.hue.config_flow
+
+.. autoapi-nested-parse::
+
+   Config flow to configure Philips Hue.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.config_flow.LOGGER
+   homeassistant.components.hue.config_flow.HUE_MANUFACTURERURL
+   homeassistant.components.hue.config_flow.HUE_IGNORED_BRIDGE_NAMES
+   homeassistant.components.hue.config_flow.HUE_MANUAL_BRIDGE_ID
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.config_flow.HueFlowHandler
+   homeassistant.components.hue.config_flow.HueV1OptionsFlowHandler
+   homeassistant.components.hue.config_flow.HueV2OptionsFlowHandler
+
+
+Module Contents
+---------------
+
+.. py:data:: LOGGER
+
+.. py:data:: HUE_MANUFACTURERURL
+   :value: ('http://www.philips.com', 'http://www.philips-hue.com')
+
+
+.. py:data:: HUE_IGNORED_BRIDGE_NAMES
+   :value: ['Home Assistant Bridge', 'Espalexa']
+
+
+.. py:data:: HUE_MANUAL_BRIDGE_ID
+   :value: 'manual'
+
+
+.. py:class:: HueFlowHandler
+
+   Bases: :py:obj:`homeassistant.config_entries.ConfigFlow`
+
+
+   Handle a Hue config flow.
+
+
+   .. py:attribute:: VERSION
+      :value: 1
+
+
+
+   .. py:method:: async_get_options_flow(config_entry: homeassistant.components.hue.bridge.HueConfigEntry) -> HueV1OptionsFlowHandler | HueV2OptionsFlowHandler
+      :staticmethod:
+
+
+      Get the options flow for this handler.
+
+
+
+   .. py:attribute:: bridge
+      :type:  aiohue.discovery.DiscoveredHueBridge | None
+      :value: None
+
+
+
+   .. py:attribute:: discovered_bridges
+      :type:  dict[str, aiohue.discovery.DiscoveredHueBridge] | None
+      :value: None
+
+
+
+   .. py:method:: async_step_user(user_input: dict[str, Any] | None = None) -> homeassistant.config_entries.ConfigFlowResult
+      :async:
+
+
+      Handle a flow initialized by the user.
+
+
+
+   .. py:method:: _get_bridge(host: str, bridge_id: str | None = None) -> aiohue.discovery.DiscoveredHueBridge
+      :async:
+
+
+      Return a DiscoveredHueBridge object.
+
+
+
+   .. py:method:: async_step_init(user_input: dict[str, Any] | None = None) -> homeassistant.config_entries.ConfigFlowResult
+      :async:
+
+
+      Handle a flow start.
+
+
+
+   .. py:method:: async_step_manual(user_input: dict[str, Any] | None = None) -> homeassistant.config_entries.ConfigFlowResult
+      :async:
+
+
+      Handle manual bridge setup.
+
+
+
+   .. py:method:: async_step_link(user_input: dict[str, Any] | None = None) -> homeassistant.config_entries.ConfigFlowResult
+      :async:
+
+
+      Attempt to link with the Hue bridge.
+
+      Given a configured host, will ask the user to press the link button
+      to connect to the bridge.
+
+
+
+   .. py:method:: async_step_zeroconf(discovery_info: homeassistant.helpers.service_info.zeroconf.ZeroconfServiceInfo) -> homeassistant.config_entries.ConfigFlowResult
+      :async:
+
+
+      Handle a discovered Hue bridge.
+
+      This flow is triggered by the Zeroconf component. It will check if the
+      host is already configured and delegate to the import step if not.
+
+
+
+   .. py:method:: async_step_homekit(discovery_info: homeassistant.helpers.service_info.zeroconf.ZeroconfServiceInfo) -> homeassistant.config_entries.ConfigFlowResult
+      :async:
+
+
+      Handle a discovered Hue bridge on HomeKit.
+
+      The bridge ID communicated over HomeKit differs, so we cannot use that
+      as the unique identifier. Therefore, this method uses discovery without
+      a unique ID.
+
+
+
+   .. py:method:: async_step_import(import_data: dict[str, Any]) -> homeassistant.config_entries.ConfigFlowResult
+      :async:
+
+
+      Import a new bridge as a config entry.
+
+      This flow is triggered by `async_setup` for both configured and
+      discovered bridges. Triggered for any bridge that does not have a
+      config entry yet (based on host).
+
+      This flow is also triggered by `async_step_discovery`.
+
+
+
+.. py:class:: HueV1OptionsFlowHandler
+
+   Bases: :py:obj:`homeassistant.config_entries.OptionsFlow`
+
+
+   Handle Hue options for V1 implementation.
+
+
+   .. py:method:: async_step_init(user_input: dict[str, Any] | None = None) -> homeassistant.config_entries.ConfigFlowResult
+      :async:
+
+
+      Manage Hue options.
+
+
+
+.. py:class:: HueV2OptionsFlowHandler
+
+   Bases: :py:obj:`homeassistant.config_entries.OptionsFlow`
+
+
+   Handle Hue options for V2 implementation.
+
+
+   .. py:method:: async_step_init(user_input: dict[str, Any] | None = None) -> homeassistant.config_entries.ConfigFlowResult
+      :async:
+
+
+      Manage Hue options.
+
+
+

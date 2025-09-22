@@ -1,0 +1,1526 @@
+<!doctype html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      homeassistant.components.hue.config_flow &mdash; homeassistant
+      documentation
+    </title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/pygments.css?v=b86133f3"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/css/theme.css?v=e59714d7"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/graphviz.css?v=4ae1632d"
+    />
+
+    <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link
+      rel="next"
+      title="homeassistant.components.hue.const"
+      href="../const/index.html"
+    />
+    <link
+      rel="prev"
+      title="homeassistant.components.hue.bridge"
+      href="../bridge/index.html"
+    />
+  </head>
+
+  <body class="wy-body-for-nav">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../../index.html" class="icon icon-home">
+              homeassistant
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+            </div>
+          </div>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <p class="caption" role="heading">
+              <span class="caption-text">Contents:</span>
+            </p>
+            <ul class="current">
+              <li class="toctree-l1 current">
+                <a class="reference internal" href="../index.html"
+                  >homeassistant.components.hue</a
+                >
+                <ul class="current">
+                  <li class="toctree-l2 current">
+                    <a
+                      class="reference internal"
+                      href="../index.html#submodules"
+                      >Submodules</a
+                    >
+                    <ul class="current">
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../binary_sensor/index.html"
+                          >homeassistant.components.hue.binary_sensor</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../bridge/index.html"
+                          >homeassistant.components.hue.bridge</a
+                        >
+                      </li>
+                      <li class="toctree-l3 current">
+                        <a class="current reference internal" href="#"
+                          >homeassistant.components.hue.config_flow</a
+                        >
+                        <ul>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="#attributes"
+                              >Attributes</a
+                            >
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="#classes"
+                              >Classes</a
+                            >
+                          </li>
+                          <li class="toctree-l4">
+                            <a
+                              class="reference internal"
+                              href="#module-contents"
+                              >Module Contents</a
+                            >
+                          </li>
+                        </ul>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../const/index.html"
+                          >homeassistant.components.hue.const</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../device_trigger/index.html"
+                          >homeassistant.components.hue.device_trigger</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../diagnostics/index.html"
+                          >homeassistant.components.hue.diagnostics</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../errors/index.html"
+                          >homeassistant.components.hue.errors</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../event/index.html"
+                          >homeassistant.components.hue.event</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../light/index.html"
+                          >homeassistant.components.hue.light</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../migration/index.html"
+                          >homeassistant.components.hue.migration</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../scene/index.html"
+                          >homeassistant.components.hue.scene</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../sensor/index.html"
+                          >homeassistant.components.hue.sensor</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../services/index.html"
+                          >homeassistant.components.hue.services</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../switch/index.html"
+                          >homeassistant.components.hue.switch</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../v1/index.html"
+                          >homeassistant.components.hue.v1</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../v2/index.html"
+                          >homeassistant.components.hue.v2</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a
+                      class="reference internal"
+                      href="../index.html#attributes"
+                      >Attributes</a
+                    >
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal" href="../index.html#classes"
+                      >Classes</a
+                    >
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal" href="../index.html#functions"
+                      >Functions</a
+                    >
+                  </li>
+                  <li class="toctree-l2">
+                    <a
+                      class="reference internal"
+                      href="../index.html#package-contents"
+                      >Package Contents</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">homeassistant</a>
+        </nav>
+
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="Page navigation">
+              <ul class="wy-breadcrumbs">
+                <li>
+                  <a
+                    href="../../../../../index.html"
+                    class="icon icon-home"
+                    aria-label="Home"
+                  ></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../index.html">homeassistant.components.hue</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  homeassistant.components.hue.config_flow
+                </li>
+                <li class="wy-breadcrumbs-aside">
+                  <a
+                    href="../../../../../_sources/autoapi/homeassistant/components/hue/config_flow/index.rst.txt"
+                    rel="nofollow"
+                  >
+                    View page source</a
+                  >
+                </li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div itemprop="articleBody">
+                <section id="module-homeassistant.components.hue.config_flow">
+                  <span id="homeassistant-components-hue-config-flow"></span>
+                  <h1>
+                    homeassistant.components.hue.config_flow<a
+                      class="headerlink"
+                      href="#module-homeassistant.components.hue.config_flow"
+                      title="Link to this heading"
+                      ></a
+                    >
+                  </h1>
+                  <p>Config flow to configure Philips Hue.</p>
+                  <section id="attributes">
+                    <h2>
+                      Attributes<a
+                        class="headerlink"
+                        href="#attributes"
+                        title="Link to this heading"
+                        ></a
+                      >
+                    </h2>
+                    <table class="autosummary longtable docutils align-default">
+                      <tbody>
+                        <tr class="row-odd">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.config_flow.LOGGER"
+                                title="homeassistant.components.hue.config_flow.LOGGER"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre">LOGGER</span></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td><p></p></td>
+                        </tr>
+                        <tr class="row-even">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.config_flow.HUE_MANUFACTURERURL"
+                                title="homeassistant.components.hue.config_flow.HUE_MANUFACTURERURL"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >HUE_MANUFACTURERURL</span
+                                  ></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td><p></p></td>
+                        </tr>
+                        <tr class="row-odd">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.config_flow.HUE_IGNORED_BRIDGE_NAMES"
+                                title="homeassistant.components.hue.config_flow.HUE_IGNORED_BRIDGE_NAMES"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >HUE_IGNORED_BRIDGE_NAMES</span
+                                  ></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td><p></p></td>
+                        </tr>
+                        <tr class="row-even">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.config_flow.HUE_MANUAL_BRIDGE_ID"
+                                title="homeassistant.components.hue.config_flow.HUE_MANUAL_BRIDGE_ID"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >HUE_MANUAL_BRIDGE_ID</span
+                                  ></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td><p></p></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </section>
+                  <section id="classes">
+                    <h2>
+                      Classes<a
+                        class="headerlink"
+                        href="#classes"
+                        title="Link to this heading"
+                        ></a
+                      >
+                    </h2>
+                    <table class="autosummary longtable docutils align-default">
+                      <tbody>
+                        <tr class="row-odd">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.config_flow.HueFlowHandler"
+                                title="homeassistant.components.hue.config_flow.HueFlowHandler"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre">HueFlowHandler</span></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td><p>Handle a Hue config flow.</p></td>
+                        </tr>
+                        <tr class="row-even">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.config_flow.HueV1OptionsFlowHandler"
+                                title="homeassistant.components.hue.config_flow.HueV1OptionsFlowHandler"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >HueV1OptionsFlowHandler</span
+                                  ></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td>
+                            <p>Handle Hue options for V1 implementation.</p>
+                          </td>
+                        </tr>
+                        <tr class="row-odd">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.config_flow.HueV2OptionsFlowHandler"
+                                title="homeassistant.components.hue.config_flow.HueV2OptionsFlowHandler"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >HueV2OptionsFlowHandler</span
+                                  ></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td>
+                            <p>Handle Hue options for V2 implementation.</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </section>
+                  <section id="module-contents">
+                    <h2>
+                      Module Contents<a
+                        class="headerlink"
+                        href="#module-contents"
+                        title="Link to this heading"
+                        ></a
+                      >
+                    </h2>
+                    <dl class="py data">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.config_flow.LOGGER"
+                      >
+                        <span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.config_flow.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">LOGGER</span></span
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.config_flow.LOGGER"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd></dd>
+                    </dl>
+
+                    <dl class="py data">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.config_flow.HUE_MANUFACTURERURL"
+                      >
+                        <span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.config_flow.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">HUE_MANUFACTURERURL</span></span
+                        ><em class="property"
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">=</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">('http://www.philips.com',</span>
+                          <span class="pre"
+                            >'http://www.philips-hue.com')</span
+                          ></em
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.config_flow.HUE_MANUFACTURERURL"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd></dd>
+                    </dl>
+
+                    <dl class="py data">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.config_flow.HUE_IGNORED_BRIDGE_NAMES"
+                      >
+                        <span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.config_flow.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre"
+                            >HUE_IGNORED_BRIDGE_NAMES</span
+                          ></span
+                        ><em class="property"
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">=</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">['Home</span>
+                          <span class="pre">Assistant</span>
+                          <span class="pre">Bridge',</span>
+                          <span class="pre">'Espalexa']</span></em
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.config_flow.HUE_IGNORED_BRIDGE_NAMES"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd></dd>
+                    </dl>
+
+                    <dl class="py data">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.config_flow.HUE_MANUAL_BRIDGE_ID"
+                      >
+                        <span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.config_flow.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">HUE_MANUAL_BRIDGE_ID</span></span
+                        ><em class="property"
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">=</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">'manual'</span></em
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.config_flow.HUE_MANUAL_BRIDGE_ID"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd></dd>
+                    </dl>
+
+                    <dl class="py class">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.config_flow.HueFlowHandler"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">class</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.config_flow.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">HueFlowHandler</span></span
+                        ><a
+                          class="reference internal"
+                          href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler"
+                          ><span class="viewcode-link"
+                            ><span class="pre">[source]</span></span
+                          ></a
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.config_flow.HueFlowHandler"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Bases:
+                          <code
+                            class="xref py py-obj docutils literal notranslate"
+                            ><span class="pre"
+                              >homeassistant.config_entries.ConfigFlow</span
+                            ></code
+                          >
+                        </p>
+                        <p>Handle a Hue config flow.</p>
+                        <dl class="py attribute">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.VERSION"
+                          >
+                            <span class="sig-name descname"
+                              ><span class="pre">VERSION</span></span
+                            ><em class="property"
+                              ><span class="w"> </span
+                              ><span class="p"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">1</span></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.VERSION"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd></dd>
+                        </dl>
+
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.async_get_options_flow"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">static</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre"
+                                >async_get_options_flow</span
+                              ></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">config_entry</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre"
+                                  >homeassistant.components.hue.bridge.HueConfigEntry</span
+                                ></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><a
+                                  class="reference internal"
+                                  href="#homeassistant.components.hue.config_flow.HueV1OptionsFlowHandler"
+                                  title="homeassistant.components.hue.config_flow.HueV1OptionsFlowHandler"
+                                  ><span class="pre"
+                                    >HueV1OptionsFlowHandler</span
+                                  ></a
+                                ><span class="w"> </span
+                                ><span class="p"
+                                  ><span class="pre">|</span></span
+                                ><span class="w"> </span
+                                ><a
+                                  class="reference internal"
+                                  href="#homeassistant.components.hue.config_flow.HueV2OptionsFlowHandler"
+                                  title="homeassistant.components.hue.config_flow.HueV2OptionsFlowHandler"
+                                  ><span class="pre"
+                                    >HueV2OptionsFlowHandler</span
+                                  ></a
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler.async_get_options_flow"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.async_get_options_flow"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Get the options flow for this handler.</p></dd>
+                        </dl>
+
+                        <dl class="py attribute">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.bridge"
+                          >
+                            <span class="sig-name descname"
+                              ><span class="pre">bridge</span></span
+                            ><em class="property"
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="pre"
+                                >aiohue.discovery.DiscoveredHueBridge</span
+                              ><span class="w"> </span
+                              ><span class="p"><span class="pre">|</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">None</span></em
+                            ><em class="property"
+                              ><span class="w"> </span
+                              ><span class="p"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">None</span></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.bridge"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd></dd>
+                        </dl>
+
+                        <dl class="py attribute">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.discovered_bridges"
+                          >
+                            <span class="sig-name descname"
+                              ><span class="pre">discovered_bridges</span></span
+                            ><em class="property"
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">dict</span
+                              ><span class="p"><span class="pre">[</span></span
+                              ><span class="pre">str</span
+                              ><span class="p"><span class="pre">,</span></span
+                              ><span class="w"> </span
+                              ><span class="pre"
+                                >aiohue.discovery.DiscoveredHueBridge</span
+                              ><span class="p"><span class="pre">]</span></span
+                              ><span class="w"> </span
+                              ><span class="p"><span class="pre">|</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">None</span></em
+                            ><em class="property"
+                              ><span class="w"> </span
+                              ><span class="p"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">None</span></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.discovered_bridges"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd></dd>
+                        </dl>
+
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.async_step_user"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">async_step_user</span></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">user_input</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre">dict</span
+                                ><span class="p"
+                                  ><span class="pre">[</span></span
+                                ><span class="pre">str</span
+                                ><span class="p"
+                                  ><span class="pre">,</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">Any</span
+                                ><span class="p"
+                                  ><span class="pre">]</span></span
+                                ><span class="w"> </span
+                                ><span class="p"
+                                  ><span class="pre">|</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">None</span></span
+                              ><span class="w"> </span
+                              ><span class="o"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="default_value"
+                                ><span class="pre">None</span></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >homeassistant.config_entries.ConfigFlowResult</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler.async_step_user"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.async_step_user"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Handle a flow initialized by the user.</p></dd>
+                        </dl>
+
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler._get_bridge"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">_get_bridge</span></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">host</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre">str</span></span
+                              ></em
+                            >,
+                            <em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">bridge_id</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre">str</span
+                                ><span class="w"> </span
+                                ><span class="p"
+                                  ><span class="pre">|</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">None</span></span
+                              ><span class="w"> </span
+                              ><span class="o"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="default_value"
+                                ><span class="pre">None</span></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >aiohue.discovery.DiscoveredHueBridge</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler._get_bridge"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler._get_bridge"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Return a DiscoveredHueBridge object.</p></dd>
+                        </dl>
+
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.async_step_init"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">async_step_init</span></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">user_input</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre">dict</span
+                                ><span class="p"
+                                  ><span class="pre">[</span></span
+                                ><span class="pre">str</span
+                                ><span class="p"
+                                  ><span class="pre">,</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">Any</span
+                                ><span class="p"
+                                  ><span class="pre">]</span></span
+                                ><span class="w"> </span
+                                ><span class="p"
+                                  ><span class="pre">|</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">None</span></span
+                              ><span class="w"> </span
+                              ><span class="o"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="default_value"
+                                ><span class="pre">None</span></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >homeassistant.config_entries.ConfigFlowResult</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler.async_step_init"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.async_step_init"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Handle a flow start.</p></dd>
+                        </dl>
+
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.async_step_manual"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">async_step_manual</span></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">user_input</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre">dict</span
+                                ><span class="p"
+                                  ><span class="pre">[</span></span
+                                ><span class="pre">str</span
+                                ><span class="p"
+                                  ><span class="pre">,</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">Any</span
+                                ><span class="p"
+                                  ><span class="pre">]</span></span
+                                ><span class="w"> </span
+                                ><span class="p"
+                                  ><span class="pre">|</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">None</span></span
+                              ><span class="w"> </span
+                              ><span class="o"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="default_value"
+                                ><span class="pre">None</span></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >homeassistant.config_entries.ConfigFlowResult</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler.async_step_manual"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.async_step_manual"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Handle manual bridge setup.</p></dd>
+                        </dl>
+
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.async_step_link"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">async_step_link</span></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">user_input</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre">dict</span
+                                ><span class="p"
+                                  ><span class="pre">[</span></span
+                                ><span class="pre">str</span
+                                ><span class="p"
+                                  ><span class="pre">,</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">Any</span
+                                ><span class="p"
+                                  ><span class="pre">]</span></span
+                                ><span class="w"> </span
+                                ><span class="p"
+                                  ><span class="pre">|</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">None</span></span
+                              ><span class="w"> </span
+                              ><span class="o"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="default_value"
+                                ><span class="pre">None</span></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >homeassistant.config_entries.ConfigFlowResult</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler.async_step_link"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.async_step_link"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd>
+                            <p>Attempt to link with the Hue bridge.</p>
+                            <p>
+                              Given a configured host, will ask the user to
+                              press the link button to connect to the bridge.
+                            </p>
+                          </dd>
+                        </dl>
+
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.async_step_zeroconf"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre"
+                                >async_step_zeroconf</span
+                              ></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">discovery_info</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre"
+                                  >homeassistant.helpers.service_info.zeroconf.ZeroconfServiceInfo</span
+                                ></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >homeassistant.config_entries.ConfigFlowResult</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler.async_step_zeroconf"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.async_step_zeroconf"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd>
+                            <p>Handle a discovered Hue bridge.</p>
+                            <p>
+                              This flow is triggered by the Zeroconf component.
+                              It will check if the host is already configured
+                              and delegate to the import step if not.
+                            </p>
+                          </dd>
+                        </dl>
+
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.async_step_homekit"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">async_step_homekit</span></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">discovery_info</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre"
+                                  >homeassistant.helpers.service_info.zeroconf.ZeroconfServiceInfo</span
+                                ></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >homeassistant.config_entries.ConfigFlowResult</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler.async_step_homekit"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.async_step_homekit"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd>
+                            <p>Handle a discovered Hue bridge on HomeKit.</p>
+                            <p>
+                              The bridge ID communicated over HomeKit differs,
+                              so we cannot use that as the unique identifier.
+                              Therefore, this method uses discovery without a
+                              unique ID.
+                            </p>
+                          </dd>
+                        </dl>
+
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueFlowHandler.async_step_import"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">async_step_import</span></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">import_data</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre">dict</span
+                                ><span class="p"
+                                  ><span class="pre">[</span></span
+                                ><span class="pre">str</span
+                                ><span class="p"
+                                  ><span class="pre">,</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">Any</span
+                                ><span class="p"
+                                  ><span class="pre">]</span></span
+                                ></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >homeassistant.config_entries.ConfigFlowResult</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueFlowHandler.async_step_import"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueFlowHandler.async_step_import"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd>
+                            <p>Import a new bridge as a config entry.</p>
+                            <p>
+                              This flow is triggered by
+                              <cite>async_setup</cite> for both configured and
+                              discovered bridges. Triggered for any bridge that
+                              does not have a config entry yet (based on host).
+                            </p>
+                            <p>
+                              This flow is also triggered by
+                              <cite>async_step_discovery</cite>.
+                            </p>
+                          </dd>
+                        </dl>
+                      </dd>
+                    </dl>
+
+                    <dl class="py class">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.config_flow.HueV1OptionsFlowHandler"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">class</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.config_flow.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre"
+                            >HueV1OptionsFlowHandler</span
+                          ></span
+                        ><a
+                          class="reference internal"
+                          href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueV1OptionsFlowHandler"
+                          ><span class="viewcode-link"
+                            ><span class="pre">[source]</span></span
+                          ></a
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.config_flow.HueV1OptionsFlowHandler"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Bases:
+                          <code
+                            class="xref py py-obj docutils literal notranslate"
+                            ><span class="pre"
+                              >homeassistant.config_entries.OptionsFlow</span
+                            ></code
+                          >
+                        </p>
+                        <p>Handle Hue options for V1 implementation.</p>
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueV1OptionsFlowHandler.async_step_init"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">async_step_init</span></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">user_input</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre">dict</span
+                                ><span class="p"
+                                  ><span class="pre">[</span></span
+                                ><span class="pre">str</span
+                                ><span class="p"
+                                  ><span class="pre">,</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">Any</span
+                                ><span class="p"
+                                  ><span class="pre">]</span></span
+                                ><span class="w"> </span
+                                ><span class="p"
+                                  ><span class="pre">|</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">None</span></span
+                              ><span class="w"> </span
+                              ><span class="o"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="default_value"
+                                ><span class="pre">None</span></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >homeassistant.config_entries.ConfigFlowResult</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueV1OptionsFlowHandler.async_step_init"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueV1OptionsFlowHandler.async_step_init"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Manage Hue options.</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+
+                    <dl class="py class">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.config_flow.HueV2OptionsFlowHandler"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">class</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.config_flow.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre"
+                            >HueV2OptionsFlowHandler</span
+                          ></span
+                        ><a
+                          class="reference internal"
+                          href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueV2OptionsFlowHandler"
+                          ><span class="viewcode-link"
+                            ><span class="pre">[source]</span></span
+                          ></a
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.config_flow.HueV2OptionsFlowHandler"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Bases:
+                          <code
+                            class="xref py py-obj docutils literal notranslate"
+                            ><span class="pre"
+                              >homeassistant.config_entries.OptionsFlow</span
+                            ></code
+                          >
+                        </p>
+                        <p>Handle Hue options for V2 implementation.</p>
+                        <dl class="py method">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.config_flow.HueV2OptionsFlowHandler.async_step_init"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">async</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">async_step_init</span></span
+                            ><span class="sig-paren">(</span
+                            ><em class="sig-param"
+                              ><span class="n"
+                                ><span class="pre">user_input</span></span
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="n"
+                                ><span class="pre">dict</span
+                                ><span class="p"
+                                  ><span class="pre">[</span></span
+                                ><span class="pre">str</span
+                                ><span class="p"
+                                  ><span class="pre">,</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">Any</span
+                                ><span class="p"
+                                  ><span class="pre">]</span></span
+                                ><span class="w"> </span
+                                ><span class="p"
+                                  ><span class="pre">|</span></span
+                                ><span class="w"> </span
+                                ><span class="pre">None</span></span
+                              ><span class="w"> </span
+                              ><span class="o"><span class="pre">=</span></span
+                              ><span class="w"> </span
+                              ><span class="default_value"
+                                ><span class="pre">None</span></span
+                              ></em
+                            ><span class="sig-paren">)</span>
+                            <span class="sig-return"
+                              ><span class="sig-return-icon">&#x2192;</span>
+                              <span class="sig-return-typehint"
+                                ><span class="pre"
+                                  >homeassistant.config_entries.ConfigFlowResult</span
+                                ></span
+                              ></span
+                            ><a
+                              class="reference internal"
+                              href="../../../../../_modules/homeassistant/components/hue/config_flow.html#HueV2OptionsFlowHandler.async_step_init"
+                              ><span class="viewcode-link"
+                                ><span class="pre">[source]</span></span
+                              ></a
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.config_flow.HueV2OptionsFlowHandler.async_step_init"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Manage Hue options.</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                  </section>
+                </section>
+              </div>
+            </div>
+            <footer>
+              <div
+                class="rst-footer-buttons"
+                role="navigation"
+                aria-label="Footer"
+              >
+                <a
+                  href="../bridge/index.html"
+                  class="btn btn-neutral float-left"
+                  title="homeassistant.components.hue.bridge"
+                  accesskey="p"
+                  rel="prev"
+                  ><span
+                    class="fa fa-arrow-circle-left"
+                    aria-hidden="true"
+                  ></span>
+                  Previous</a
+                >
+                <a
+                  href="../const/index.html"
+                  class="btn btn-neutral float-right"
+                  title="homeassistant.components.hue.const"
+                  accesskey="n"
+                  rel="next"
+                  >Next
+                  <span
+                    class="fa fa-arrow-circle-right"
+                    aria-hidden="true"
+                  ></span
+                ></a>
+              </div>
+
+              <hr />
+
+              <div role="contentinfo">
+                <p>&#169; Copyright 2025, Clara Simonsson.</p>
+              </div>
+
+              Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using
+              a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme"
+                >theme</a
+              >
+              provided by <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
+    </script>
+  </body>
+</html>

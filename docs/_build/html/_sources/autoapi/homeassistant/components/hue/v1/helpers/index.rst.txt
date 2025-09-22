@@ -1,0 +1,29 @@
+homeassistant.components.hue.v1.helpers
+=======================================
+
+.. py:module:: homeassistant.components.hue.v1.helpers
+
+.. autoapi-nested-parse::
+
+   Helper functions for Philips Hue.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.helpers.remove_devices
+
+
+Module Contents
+---------------
+
+.. py:function:: remove_devices(bridge, api_ids, current)
+   :async:
+
+
+   Get items that are removed from api.
+
+

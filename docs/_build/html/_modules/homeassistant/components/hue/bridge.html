@@ -1,0 +1,369 @@
+<!doctype html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      homeassistant.components.hue.bridge &mdash; homeassistant documentation
+    </title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../_static/pygments.css?v=b86133f3"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../_static/css/theme.css?v=e59714d7"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../_static/graphviz.css?v=4ae1632d"
+    />
+
+    <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  </head>
+
+  <body class="wy-body-for-nav">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../index.html" class="icon icon-home">
+              homeassistant
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+            </div>
+          </div>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <p class="caption" role="heading">
+              <span class="caption-text">Contents:</span>
+            </p>
+            <ul>
+              <li class="toctree-l1">
+                <a
+                  class="reference internal"
+                  href="../../../../autoapi/homeassistant/components/hue/index.html"
+                  >homeassistant.components.hue</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">homeassistant</a>
+        </nav>
+
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="Page navigation">
+              <ul class="wy-breadcrumbs">
+                <li>
+                  <a
+                    href="../../../../index.html"
+                    class="icon icon-home"
+                    aria-label="Home"
+                  ></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../../index.html">Module code</a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../hue.html">homeassistant.components.hue</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  homeassistant.components.hue.bridge
+                </li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div itemprop="articleBody">
+                <h1>Source code for homeassistant.components.hue.bridge</h1>
+                <div class="highlight">
+                  <pre>
+<span></span><span class="sd">&quot;&quot;&quot;Code to handle a Hue bridge.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">aiohttp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohttp</span><span class="w"> </span><span class="kn">import</span> <span class="n">client_exceptions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBridgeV1</span><span class="p">,</span> <span class="n">HueBridgeV2</span><span class="p">,</span> <span class="n">LinkButtonNotPressed</span><span class="p">,</span> <span class="n">Unauthorized</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">AiohueException</span><span class="p">,</span> <span class="n">BridgeBusy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant</span><span class="w"> </span><span class="kn">import</span> <span class="n">core</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.config_entries</span><span class="w"> </span><span class="kn">import</span> <span class="n">SOURCE_IMPORT</span><span class="p">,</span> <span class="n">ConfigEntry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.const</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONF_API_KEY</span><span class="p">,</span> <span class="n">CONF_API_VERSION</span><span class="p">,</span> <span class="n">CONF_HOST</span><span class="p">,</span> <span class="n">Platform</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigEntryNotReady</span><span class="p">,</span> <span class="n">HomeAssistantError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">aiohttp_client</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.const</span><span class="w"> </span><span class="kn">import</span> <span class="n">DOMAIN</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.v1.sensor_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SensorManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.v2.device</span><span class="w"> </span><span class="kn">import</span> <span class="n">async_setup_devices</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.v2.hue_event</span><span class="w"> </span><span class="kn">import</span> <span class="n">async_setup_hue_events</span>
+
+<span class="c1"># How long should we sleep if the hub is busy</span>
+<span class="n">HUB_BUSY_SLEEP</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">PLATFORMS_v1</span> <span class="o">=</span> <span class="p">[</span><span class="n">Platform</span><span class="o">.</span><span class="n">BINARY_SENSOR</span><span class="p">,</span> <span class="n">Platform</span><span class="o">.</span><span class="n">LIGHT</span><span class="p">,</span> <span class="n">Platform</span><span class="o">.</span><span class="n">SENSOR</span><span class="p">]</span>
+<span class="n">PLATFORMS_v2</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Platform</span><span class="o">.</span><span class="n">BINARY_SENSOR</span><span class="p">,</span>
+    <span class="n">Platform</span><span class="o">.</span><span class="n">EVENT</span><span class="p">,</span>
+    <span class="n">Platform</span><span class="o">.</span><span class="n">LIGHT</span><span class="p">,</span>
+    <span class="n">Platform</span><span class="o">.</span><span class="n">SCENE</span><span class="p">,</span>
+    <span class="n">Platform</span><span class="o">.</span><span class="n">SENSOR</span><span class="p">,</span>
+    <span class="n">Platform</span><span class="o">.</span><span class="n">SWITCH</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="nb">type</span> <span class="n">HueConfigEntry</span> <span class="o">=</span> <span class="n">ConfigEntry</span><span class="p">[</span><span class="n">HueBridge</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="HueBridge">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/index.html#homeassistant.components.hue.bridge.HueBridge">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HueBridge</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages a single Hue bridge.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hass</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">HomeAssistant</span><span class="p">,</span> <span class="n">config_entry</span><span class="p">:</span> <span class="n">HueConfigEntry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the system.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span> <span class="o">=</span> <span class="n">config_entry</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hass</span> <span class="o">=</span> <span class="n">hass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authorized</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Jobs to be executed when API is reset.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_jobs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">core</span><span class="o">.</span><span class="n">CALLBACK_TYPE</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor_manager</span><span class="p">:</span> <span class="n">SensorManager</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="c1"># store actual api connection to bridge as api</span>
+        <span class="n">app_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">CONF_API_KEY</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="o">=</span> <span class="n">HueBridgeV1</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">app_key</span><span class="p">,</span> <span class="n">aiohttp_client</span><span class="o">.</span><span class="n">async_get_clientsession</span><span class="p">(</span><span class="n">hass</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="o">=</span> <span class="n">HueBridgeV2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">app_key</span><span class="p">)</span>
+        <span class="c1"># store (this) bridge object in hass data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span><span class="o">.</span><span class="n">runtime_data</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">host</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the host of this bridge.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">CONF_HOST</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">api_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return api version we&#39;re set-up for.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">CONF_API_VERSION</span><span class="p">]</span>
+
+<div class="viewcode-block" id="HueBridge.async_initialize_bridge">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/index.html#homeassistant.components.hue.bridge.HueBridge.async_initialize_bridge">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_initialize_bridge</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize Connection with the Hue API.&quot;&quot;&quot;</span>
+        <span class="n">setup_ok</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+            <span class="n">setup_ok</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">LinkButtonNotPressed</span><span class="p">,</span> <span class="n">Unauthorized</span><span class="p">):</span>
+            <span class="c1"># Usernames can become invalid if hub is reset or user removed.</span>
+            <span class="c1"># We are going to fail the config entry setup and initiate a new</span>
+            <span class="c1"># linking procedure. When linking succeeds, it will remove the</span>
+            <span class="c1"># old config entry.</span>
+            <span class="n">create_config_flow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hass</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="p">(</span>
+            <span class="ne">TimeoutError</span><span class="p">,</span>
+            <span class="n">client_exceptions</span><span class="o">.</span><span class="n">ClientOSError</span><span class="p">,</span>
+            <span class="n">client_exceptions</span><span class="o">.</span><span class="n">ServerDisconnectedError</span><span class="p">,</span>
+            <span class="n">client_exceptions</span><span class="o">.</span><span class="n">ContentTypeError</span><span class="p">,</span>
+            <span class="n">BridgeBusy</span><span class="p">,</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigEntryNotReady</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Error connecting to the Hue bridge at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Unknown error connecting to Hue bridge&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">setup_ok</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># v1 specific initialization/setup code here</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">sensors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sensor_manager</span> <span class="o">=</span> <span class="n">SensorManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">hass</span><span class="o">.</span><span class="n">config_entries</span><span class="o">.</span><span class="n">async_forward_entry_setups</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span><span class="p">,</span> <span class="n">PLATFORMS_v1</span>
+            <span class="p">)</span>
+
+        <span class="c1"># v2 specific initialization/setup code here</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">async_setup_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">async_setup_hue_events</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">hass</span><span class="o">.</span><span class="n">config_entries</span><span class="o">.</span><span class="n">async_forward_entry_setups</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span><span class="p">,</span> <span class="n">PLATFORMS_v2</span>
+            <span class="p">)</span>
+
+        <span class="c1"># add listener for config entry updates.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span><span class="o">.</span><span class="n">add_update_listener</span><span class="p">(</span><span class="n">_update_listener</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authorized</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="HueBridge.async_request_call">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/index.html#homeassistant.components.hue.bridge.HueBridge.async_request_call">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_request_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send request to the Hue bridge.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">task</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">AiohueException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="c1"># The (new) Hue api can be a bit fanatic with throwing errors so</span>
+            <span class="c1"># we have some logic to treat some responses as warning only.</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Request failed: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="s2">&quot;may not have effect&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">):</span>
+                <span class="c1"># log only</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">raise</span> <span class="n">HomeAssistantError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+        <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">HomeAssistantError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Request failed due connection error: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="HueBridge.async_reset">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/index.html#homeassistant.components.hue.bridge.HueBridge.async_reset">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset this bridge to default state.</span>
+
+<span class="sd">        Will cancel any scheduled setup retry and will unload</span>
+<span class="sd">        the config entry.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># The bridge can be in 3 states:</span>
+        <span class="c1">#  - Setup was successful, self.api is not None</span>
+        <span class="c1">#  - Authentication was wrong, self.api is None, not retrying setup.</span>
+
+        <span class="c1"># If the authentication was wrong.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_jobs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset_jobs</span><span class="o">.</span><span class="n">pop</span><span class="p">()()</span>
+
+        <span class="c1"># Unload platforms</span>
+        <span class="n">unload_success</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">hass</span><span class="o">.</span><span class="n">config_entries</span><span class="o">.</span><span class="n">async_unload_platforms</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span><span class="p">,</span> <span class="n">PLATFORMS_v1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_version</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">PLATFORMS_v2</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">unload_success</span><span class="p">:</span>
+            <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_entry</span><span class="p">,</span> <span class="s2">&quot;runtime_data&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">unload_success</span></div>
+
+
+<div class="viewcode-block" id="HueBridge.handle_unauthorized_error">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/index.html#homeassistant.components.hue.bridge.HueBridge.handle_unauthorized_error">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_unauthorized_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new config flow when the authorization is no longer valid.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">authorized</span><span class="p">:</span>
+            <span class="c1"># we already created a new config flow, no need to do it again</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;Unable to authorize to bridge </span><span class="si">%s</span><span class="s2">, setup the linking again&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authorized</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">create_config_flow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hass</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_update_listener">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/bridge/index.html#homeassistant.components.hue.bridge._update_listener">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_update_listener</span><span class="p">(</span><span class="n">hass</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">HomeAssistant</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">HueConfigEntry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle ConfigEntry options update.&quot;&quot;&quot;</span>
+    <span class="k">await</span> <span class="n">hass</span><span class="o">.</span><span class="n">config_entries</span><span class="o">.</span><span class="n">async_reload</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">entry_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_config_flow">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/bridge/index.html#homeassistant.components.hue.bridge.create_config_flow">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_config_flow</span><span class="p">(</span><span class="n">hass</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">HomeAssistant</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start a config flow.&quot;&quot;&quot;</span>
+    <span class="n">hass</span><span class="o">.</span><span class="n">async_create_task</span><span class="p">(</span>
+        <span class="n">hass</span><span class="o">.</span><span class="n">config_entries</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">async_init</span><span class="p">(</span>
+            <span class="n">DOMAIN</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">SOURCE_IMPORT</span><span class="p">},</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="n">host</span><span class="p">},</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+</pre>
+                </div>
+              </div>
+            </div>
+            <footer>
+              <hr />
+
+              <div role="contentinfo">
+                <p>&#169; Copyright 2025, Clara Simonsson.</p>
+              </div>
+
+              Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using
+              a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme"
+                >theme</a
+              >
+              provided by <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
+    </script>
+  </body>
+</html>

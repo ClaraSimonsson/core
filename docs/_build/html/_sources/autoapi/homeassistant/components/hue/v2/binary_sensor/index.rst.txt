@@ -1,0 +1,168 @@
+homeassistant.components.hue.v2.binary_sensor
+=============================================
+
+.. py:module:: homeassistant.components.hue.v2.binary_sensor
+
+.. autoapi-nested-parse::
+
+   Support for Hue binary sensors.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.binary_sensor.SensorType
+   homeassistant.components.hue.v2.binary_sensor.ControllerType
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.binary_sensor.HueMotionSensor
+   homeassistant.components.hue.v2.binary_sensor.HueEntertainmentActiveSensor
+   homeassistant.components.hue.v2.binary_sensor.HueContactSensor
+   homeassistant.components.hue.v2.binary_sensor.HueTamperSensor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.binary_sensor.async_setup_entry
+
+
+Module Contents
+---------------
+
+.. py:type:: SensorType
+   :canonical: CameraMotion | Contact | Motion | EntertainmentConfiguration | Tamper
+
+
+.. py:type:: ControllerType
+   :canonical: CameraMotionController | ContactController | MotionController | EntertainmentConfigurationController | TamperController
+
+
+.. py:function:: async_setup_entry(hass: homeassistant.core.HomeAssistant, config_entry: homeassistant.components.hue.bridge.HueConfigEntry, async_add_entities: homeassistant.helpers.entity_platform.AddConfigEntryEntitiesCallback) -> None
+   :async:
+
+
+   Set up Hue Sensors from Config Entry.
+
+
+.. py:class:: HueMotionSensor(bridge: homeassistant.components.hue.bridge.HueBridge, controller: aiohue.v2.controllers.base.BaseResourcesController, resource: HueResource)
+
+   Bases: :py:obj:`homeassistant.components.hue.v2.entity.HueBaseEntity`, :py:obj:`homeassistant.components.binary_sensor.BinarySensorEntity`
+
+
+   Representation of a Hue Motion sensor.
+
+
+   .. py:attribute:: controller
+      :type:  aiohue.v2.controllers.sensors.CameraMotionController | aiohue.v2.controllers.sensors.MotionController
+
+
+   .. py:attribute:: resource
+      :type:  aiohue.v2.models.camera_motion.CameraMotion | aiohue.v2.models.motion.Motion
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: is_on
+      :type: bool | None
+
+
+      Return true if the binary sensor is on.
+
+
+.. py:class:: HueEntertainmentActiveSensor(bridge: homeassistant.components.hue.bridge.HueBridge, controller: aiohue.v2.controllers.base.BaseResourcesController, resource: HueResource)
+
+   Bases: :py:obj:`homeassistant.components.hue.v2.entity.HueBaseEntity`, :py:obj:`homeassistant.components.binary_sensor.BinarySensorEntity`
+
+
+   Representation of a Hue Entertainment Configuration as binary sensor.
+
+
+   .. py:attribute:: controller
+      :type:  aiohue.v2.controllers.config.EntertainmentConfigurationController
+
+
+   .. py:attribute:: resource
+      :type:  aiohue.v2.controllers.config.EntertainmentConfiguration
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: is_on
+      :type: bool | None
+
+
+      Return true if the binary sensor is on.
+
+
+   .. py:property:: name
+      :type: str
+
+
+      Return sensor name.
+
+
+.. py:class:: HueContactSensor(bridge: homeassistant.components.hue.bridge.HueBridge, controller: aiohue.v2.controllers.base.BaseResourcesController, resource: HueResource)
+
+   Bases: :py:obj:`homeassistant.components.hue.v2.entity.HueBaseEntity`, :py:obj:`homeassistant.components.binary_sensor.BinarySensorEntity`
+
+
+   Representation of a Hue Contact sensor.
+
+
+   .. py:attribute:: controller
+      :type:  aiohue.v2.controllers.sensors.ContactController
+
+
+   .. py:attribute:: resource
+      :type:  aiohue.v2.models.contact.Contact
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: is_on
+      :type: bool | None
+
+
+      Return true if the binary sensor is on.
+
+
+.. py:class:: HueTamperSensor(bridge: homeassistant.components.hue.bridge.HueBridge, controller: aiohue.v2.controllers.base.BaseResourcesController, resource: HueResource)
+
+   Bases: :py:obj:`homeassistant.components.hue.v2.entity.HueBaseEntity`, :py:obj:`homeassistant.components.binary_sensor.BinarySensorEntity`
+
+
+   Representation of a Hue Tamper sensor.
+
+
+   .. py:attribute:: controller
+      :type:  aiohue.v2.controllers.sensors.TamperController
+
+
+   .. py:attribute:: resource
+      :type:  aiohue.v2.models.tamper.Tamper
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: is_on
+      :type: bool | None
+
+
+      Return true if the binary sensor is on.
+
+

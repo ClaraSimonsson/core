@@ -1,0 +1,83 @@
+homeassistant.components.hue.v1.hue_event
+=========================================
+
+.. py:module:: homeassistant.components.hue.v1.hue_event
+
+.. autoapi-nested-parse::
+
+   Representation of a Hue remote firing events for button presses.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.hue_event.LOGGER
+   homeassistant.components.hue.v1.hue_event.CONF_LAST_UPDATED
+   homeassistant.components.hue.v1.hue_event.EVENT_NAME_FORMAT
+   homeassistant.components.hue.v1.hue_event.EVENT_CONFIG_MAP
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.hue_event.HueEvent
+
+
+Module Contents
+---------------
+
+.. py:data:: LOGGER
+
+.. py:data:: CONF_LAST_UPDATED
+   :value: 'last_updated'
+
+
+.. py:data:: EVENT_NAME_FORMAT
+   :value: '{}'
+
+
+.. py:class:: HueEvent(sensor, name, bridge, primary_sensor=None)
+
+   Bases: :py:obj:`homeassistant.components.hue.v1.sensor_device.GenericHueDevice`
+
+
+   When you want signals instead of entities.
+
+   Stateless sensors such as remotes are expected to generate an event
+   instead of a sensor entity in hass.
+
+
+   .. py:attribute:: device_registry_id
+      :value: None
+
+
+
+   .. py:attribute:: event_id
+      :value: ''
+
+
+
+   .. py:attribute:: _last_state
+
+
+   .. py:method:: async_update_callback()
+
+      Fire the event if reason is that state is updated.
+
+
+
+   .. py:method:: async_update_device_registry()
+      :async:
+
+
+      Update device registry.
+
+
+
+.. py:data:: EVENT_CONFIG_MAP
+

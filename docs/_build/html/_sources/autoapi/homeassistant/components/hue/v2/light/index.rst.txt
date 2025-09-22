@@ -1,0 +1,201 @@
+homeassistant.components.hue.v2.light
+=====================================
+
+.. py:module:: homeassistant.components.hue.v2.light
+
+.. autoapi-nested-parse::
+
+   Support for Hue lights.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.light.FALLBACK_MIN_KELVIN
+   homeassistant.components.hue.v2.light.FALLBACK_MAX_KELVIN
+   homeassistant.components.hue.v2.light.FALLBACK_KELVIN
+   homeassistant.components.hue.v2.light.DEPRECATED_EFFECT_NONE
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.light.HueLight
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.light.async_setup_entry
+
+
+Module Contents
+---------------
+
+.. py:data:: FALLBACK_MIN_KELVIN
+   :value: 6500
+
+
+.. py:data:: FALLBACK_MAX_KELVIN
+   :value: 2000
+
+
+.. py:data:: FALLBACK_KELVIN
+   :value: 5800
+
+
+.. py:data:: DEPRECATED_EFFECT_NONE
+   :value: 'None'
+
+
+.. py:function:: async_setup_entry(hass: homeassistant.core.HomeAssistant, config_entry: homeassistant.components.hue.bridge.HueConfigEntry, async_add_entities: homeassistant.helpers.entity_platform.AddConfigEntryEntitiesCallback) -> None
+   :async:
+
+
+   Set up Hue Light from Config Entry.
+
+
+.. py:class:: HueLight(bridge: homeassistant.components.hue.bridge.HueBridge, controller: aiohue.v2.controllers.lights.LightsController, resource: aiohue.v2.models.light.Light)
+
+   Bases: :py:obj:`homeassistant.components.hue.v2.entity.HueBaseEntity`, :py:obj:`homeassistant.components.light.LightEntity`
+
+
+   Representation of a Hue light.
+
+
+   .. py:attribute:: _fixed_color_mode
+      :type:  homeassistant.components.light.ColorMode | None
+      :value: None
+
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:attribute:: resource
+
+
+   .. py:attribute:: controller
+
+
+   .. py:attribute:: _attr_supported_color_modes
+
+
+   .. py:attribute:: _last_brightness
+      :type:  float | None
+      :value: None
+
+
+
+   .. py:attribute:: _color_temp_active
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: _attr_effect_list
+      :value: []
+
+
+
+   .. py:property:: brightness
+      :type: int | None
+
+
+      Return the brightness of this light between 0..255.
+
+
+   .. py:property:: is_on
+      :type: bool
+
+
+      Return true if device is on (brightness above 0).
+
+
+   .. py:property:: color_mode
+      :type: homeassistant.components.light.ColorMode
+
+
+      Return the color mode of the light.
+
+
+   .. py:property:: color_temp_active
+      :type: bool
+
+
+      Return if the light is in Color Temperature mode.
+
+
+   .. py:property:: xy_color
+      :type: tuple[float, float] | None
+
+
+      Return the xy color.
+
+
+   .. py:property:: color_temp_kelvin
+      :type: int | None
+
+
+      Return the color temperature value in Kelvin.
+
+
+   .. py:property:: max_color_temp_kelvin
+      :type: int
+
+
+      Return the coldest color_temp_kelvin that this light supports.
+
+
+   .. py:property:: min_color_temp_kelvin
+      :type: int
+
+
+      Return the warmest color_temp_kelvin that this light supports.
+
+
+   .. py:property:: extra_state_attributes
+      :type: dict[str, str] | None
+
+
+      Return the optional state attributes.
+
+
+   .. py:property:: effect
+      :type: str | None
+
+
+      Return the current effect.
+
+
+   .. py:method:: async_turn_on(**kwargs: Any) -> None
+      :async:
+
+
+      Turn the device on.
+
+
+
+   .. py:method:: async_turn_off(**kwargs: Any) -> None
+      :async:
+
+
+      Turn the light off.
+
+
+
+   .. py:method:: async_set_flash(flash: str) -> None
+      :async:
+
+
+      Send flash command to light.
+
+
+

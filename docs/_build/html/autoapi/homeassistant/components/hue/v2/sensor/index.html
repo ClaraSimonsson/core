@@ -1,0 +1,1414 @@
+<!doctype html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      homeassistant.components.hue.v2.sensor &mdash; homeassistant documentation
+    </title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../../_static/pygments.css?v=b86133f3"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../../_static/css/theme.css?v=e59714d7"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../../_static/graphviz.css?v=4ae1632d"
+    />
+
+    <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+    <link
+      rel="prev"
+      title="homeassistant.components.hue.v2.light"
+      href="../light/index.html"
+    />
+  </head>
+
+  <body class="wy-body-for-nav">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../../../index.html" class="icon icon-home">
+              homeassistant
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+            </div>
+          </div>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <p class="caption" role="heading">
+              <span class="caption-text">Contents:</span>
+            </p>
+            <ul class="current">
+              <li class="toctree-l1 current">
+                <a class="reference internal" href="../../index.html"
+                  >homeassistant.components.hue</a
+                >
+                <ul class="current">
+                  <li class="toctree-l2 current">
+                    <a
+                      class="reference internal"
+                      href="../../index.html#submodules"
+                      >Submodules</a
+                    >
+                    <ul class="current">
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../binary_sensor/index.html"
+                          >homeassistant.components.hue.binary_sensor</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../bridge/index.html"
+                          >homeassistant.components.hue.bridge</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../config_flow/index.html"
+                          >homeassistant.components.hue.config_flow</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../const/index.html"
+                          >homeassistant.components.hue.const</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../device_trigger/index.html"
+                          >homeassistant.components.hue.device_trigger</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../diagnostics/index.html"
+                          >homeassistant.components.hue.diagnostics</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../errors/index.html"
+                          >homeassistant.components.hue.errors</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../event/index.html"
+                          >homeassistant.components.hue.event</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../light/index.html"
+                          >homeassistant.components.hue.light</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../migration/index.html"
+                          >homeassistant.components.hue.migration</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../scene/index.html"
+                          >homeassistant.components.hue.scene</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../sensor/index.html"
+                          >homeassistant.components.hue.sensor</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../services/index.html"
+                          >homeassistant.components.hue.services</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a
+                          class="reference internal"
+                          href="../../switch/index.html"
+                          >homeassistant.components.hue.switch</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../v1/index.html"
+                          >homeassistant.components.hue.v1</a
+                        >
+                      </li>
+                      <li class="toctree-l3 current">
+                        <a class="reference internal" href="../index.html"
+                          >homeassistant.components.hue.v2</a
+                        >
+                        <ul class="current">
+                          <li class="toctree-l4 current">
+                            <a
+                              class="reference internal"
+                              href="../index.html#submodules"
+                              >Submodules</a
+                            >
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a
+                      class="reference internal"
+                      href="../../index.html#attributes"
+                      >Attributes</a
+                    >
+                  </li>
+                  <li class="toctree-l2">
+                    <a
+                      class="reference internal"
+                      href="../../index.html#classes"
+                      >Classes</a
+                    >
+                  </li>
+                  <li class="toctree-l2">
+                    <a
+                      class="reference internal"
+                      href="../../index.html#functions"
+                      >Functions</a
+                    >
+                  </li>
+                  <li class="toctree-l2">
+                    <a
+                      class="reference internal"
+                      href="../../index.html#package-contents"
+                      >Package Contents</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">homeassistant</a>
+        </nav>
+
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="Page navigation">
+              <ul class="wy-breadcrumbs">
+                <li>
+                  <a
+                    href="../../../../../../index.html"
+                    class="icon icon-home"
+                    aria-label="Home"
+                  ></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../index.html">homeassistant.components.hue</a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../index.html">homeassistant.components.hue.v2</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  homeassistant.components.hue.v2.sensor
+                </li>
+                <li class="wy-breadcrumbs-aside">
+                  <a
+                    href="../../../../../../_sources/autoapi/homeassistant/components/hue/v2/sensor/index.rst.txt"
+                    rel="nofollow"
+                  >
+                    View page source</a
+                  >
+                </li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div itemprop="articleBody">
+                <section id="module-homeassistant.components.hue.v2.sensor">
+                  <span id="homeassistant-components-hue-v2-sensor"></span>
+                  <h1>
+                    homeassistant.components.hue.v2.sensor<a
+                      class="headerlink"
+                      href="#module-homeassistant.components.hue.v2.sensor"
+                      title="Link to this heading"
+                      ></a
+                    >
+                  </h1>
+                  <p>Support for Hue sensors.</p>
+                  <section id="attributes">
+                    <h2>
+                      Attributes<a
+                        class="headerlink"
+                        href="#attributes"
+                        title="Link to this heading"
+                        ></a
+                      >
+                    </h2>
+                    <table class="autosummary longtable docutils align-default">
+                      <tbody>
+                        <tr class="row-odd">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.v2.sensor.SensorType"
+                                title="homeassistant.components.hue.v2.sensor.SensorType"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre">SensorType</span></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td><p></p></td>
+                        </tr>
+                        <tr class="row-even">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.v2.sensor.ControllerType"
+                                title="homeassistant.components.hue.v2.sensor.ControllerType"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre">ControllerType</span></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td><p></p></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </section>
+                  <section id="classes">
+                    <h2>
+                      Classes<a
+                        class="headerlink"
+                        href="#classes"
+                        title="Link to this heading"
+                        ></a
+                      >
+                    </h2>
+                    <table class="autosummary longtable docutils align-default">
+                      <tbody>
+                        <tr class="row-odd">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.v2.sensor.HueSensorBase"
+                                title="homeassistant.components.hue.v2.sensor.HueSensorBase"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre">HueSensorBase</span></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td><p>Representation of a Hue sensor.</p></td>
+                        </tr>
+                        <tr class="row-even">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.v2.sensor.HueTemperatureSensor"
+                                title="homeassistant.components.hue.v2.sensor.HueTemperatureSensor"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >HueTemperatureSensor</span
+                                  ></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td>
+                            <p>Representation of a Hue Temperature sensor.</p>
+                          </td>
+                        </tr>
+                        <tr class="row-odd">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.v2.sensor.HueLightLevelSensor"
+                                title="homeassistant.components.hue.v2.sensor.HueLightLevelSensor"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >HueLightLevelSensor</span
+                                  ></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td>
+                            <p>
+                              Representation of a Hue LightLevel (illuminance)
+                              sensor.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr class="row-even">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.v2.sensor.HueBatterySensor"
+                                title="homeassistant.components.hue.v2.sensor.HueBatterySensor"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >HueBatterySensor</span
+                                  ></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td>
+                            <p>Representation of a Hue Battery sensor.</p>
+                          </td>
+                        </tr>
+                        <tr class="row-odd">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor"
+                                title="homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >HueZigbeeConnectivitySensor</span
+                                  ></code
+                                ></a
+                              >
+                            </p>
+                          </td>
+                          <td>
+                            <p>
+                              Representation of a Hue ZigbeeConnectivity sensor.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </section>
+                  <section id="functions">
+                    <h2>
+                      Functions<a
+                        class="headerlink"
+                        href="#functions"
+                        title="Link to this heading"
+                        ></a
+                      >
+                    </h2>
+                    <table class="autosummary longtable docutils align-default">
+                      <tbody>
+                        <tr class="row-odd">
+                          <td>
+                            <p>
+                              <a
+                                class="reference internal"
+                                href="#homeassistant.components.hue.v2.sensor.async_setup_entry"
+                                title="homeassistant.components.hue.v2.sensor.async_setup_entry"
+                                ><code
+                                  class="xref py py-obj docutils literal notranslate"
+                                  ><span class="pre"
+                                    >async_setup_entry</span
+                                  ></code
+                                ></a
+                              >(→ None)
+                            </p>
+                          </td>
+                          <td><p>Set up Hue Sensors from Config Entry.</p></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </section>
+                  <section id="module-contents">
+                    <h2>
+                      Module Contents<a
+                        class="headerlink"
+                        href="#module-contents"
+                        title="Link to this heading"
+                        ></a
+                      >
+                    </h2>
+                    <dl class="py type">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.v2.sensor.SensorType"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">type</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.v2.sensor.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">SensorType</span></span
+                        ><em class="property"
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">=</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">DevicePower</span
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">|</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">LightLevel</span
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">|</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">Temperature</span
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">|</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">ZigbeeConnectivity</span></em
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.v2.sensor.SensorType"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd></dd>
+                    </dl>
+
+                    <dl class="py type">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.v2.sensor.ControllerType"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">type</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.v2.sensor.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">ControllerType</span></span
+                        ><em class="property"
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">=</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">DevicePowerController</span
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">|</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">LightLevelController</span
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">|</span></span
+                          ><span class="w"> </span
+                          ><span class="pre">TemperatureController</span
+                          ><span class="w"> </span
+                          ><span class="p"><span class="pre">|</span></span
+                          ><span class="w"> </span
+                          ><span class="pre"
+                            >ZigbeeConnectivityController</span
+                          ></em
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.v2.sensor.ControllerType"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd></dd>
+                    </dl>
+
+                    <dl class="py function">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.v2.sensor.async_setup_entry"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">async</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.v2.sensor.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">async_setup_entry</span></span
+                        ><span class="sig-paren">(</span
+                        ><em class="sig-param"
+                          ><span class="n"><span class="pre">hass</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre"
+                              >homeassistant.core.HomeAssistant</span
+                            ></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">config_entry</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre"
+                              >homeassistant.components.hue.bridge.HueConfigEntry</span
+                            ></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">async_add_entities</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre"
+                              >homeassistant.helpers.entity_platform.AddConfigEntryEntitiesCallback</span
+                            ></span
+                          ></em
+                        ><span class="sig-paren">)</span>
+                        <span class="sig-return"
+                          ><span class="sig-return-icon">&#x2192;</span>
+                          <span class="sig-return-typehint"
+                            ><span class="pre">None</span></span
+                          ></span
+                        ><a
+                          class="reference internal"
+                          href="../../../../../../_modules/homeassistant/components/hue/v2/sensor.html#async_setup_entry"
+                          ><span class="viewcode-link"
+                            ><span class="pre">[source]</span></span
+                          ></a
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.v2.sensor.async_setup_entry"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd><p>Set up Hue Sensors from Config Entry.</p></dd>
+                    </dl>
+
+                    <dl class="py class">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.v2.sensor.HueSensorBase"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">class</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.v2.sensor.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">HueSensorBase</span></span
+                        ><span class="sig-paren">(</span
+                        ><em class="sig-param"
+                          ><span class="n"><span class="pre">bridge</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><a
+                              class="reference internal"
+                              href="../../bridge/index.html#homeassistant.components.hue.bridge.HueBridge"
+                              title="homeassistant.components.hue.bridge.HueBridge"
+                              ><span class="pre"
+                                >homeassistant.components.hue.bridge.HueBridge</span
+                              ></a
+                            ></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">controller</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">ControllerType</span></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">resource</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">SensorType</span></span
+                          ></em
+                        ><span class="sig-paren">)</span
+                        ><a
+                          class="reference internal"
+                          href="../../../../../../_modules/homeassistant/components/hue/v2/sensor.html#HueSensorBase"
+                          ><span class="viewcode-link"
+                            ><span class="pre">[source]</span></span
+                          ></a
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.v2.sensor.HueSensorBase"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Bases:
+                          <a
+                            class="reference internal"
+                            href="../entity/index.html#homeassistant.components.hue.v2.entity.HueBaseEntity"
+                            title="homeassistant.components.hue.v2.entity.HueBaseEntity"
+                            ><code
+                              class="xref py py-obj docutils literal notranslate"
+                              ><span class="pre"
+                                >homeassistant.components.hue.v2.entity.HueBaseEntity</span
+                              ></code
+                            ></a
+                          >,
+                          <code
+                            class="xref py py-obj docutils literal notranslate"
+                            ><span class="pre"
+                              >homeassistant.components.sensor.SensorEntity</span
+                            ></code
+                          >
+                        </p>
+                        <p>Representation of a Hue sensor.</p>
+                        <dl class="py attribute">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueSensorBase.resource"
+                          >
+                            <span class="sig-name descname"
+                              ><span class="pre">resource</span></span
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueSensorBase.resource"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd></dd>
+                        </dl>
+
+                        <dl class="py attribute">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueSensorBase.controller"
+                          >
+                            <span class="sig-name descname"
+                              ><span class="pre">controller</span></span
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueSensorBase.controller"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+
+                    <dl class="py class">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.v2.sensor.HueTemperatureSensor"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">class</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.v2.sensor.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">HueTemperatureSensor</span></span
+                        ><span class="sig-paren">(</span
+                        ><em class="sig-param"
+                          ><span class="n"><span class="pre">bridge</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><a
+                              class="reference internal"
+                              href="../../bridge/index.html#homeassistant.components.hue.bridge.HueBridge"
+                              title="homeassistant.components.hue.bridge.HueBridge"
+                              ><span class="pre"
+                                >homeassistant.components.hue.bridge.HueBridge</span
+                              ></a
+                            ></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">controller</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">ControllerType</span></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">resource</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">SensorType</span></span
+                          ></em
+                        ><span class="sig-paren">)</span
+                        ><a
+                          class="reference internal"
+                          href="../../../../../../_modules/homeassistant/components/hue/v2/sensor.html#HueTemperatureSensor"
+                          ><span class="viewcode-link"
+                            ><span class="pre">[source]</span></span
+                          ></a
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.v2.sensor.HueTemperatureSensor"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Bases:
+                          <a
+                            class="reference internal"
+                            href="#homeassistant.components.hue.v2.sensor.HueSensorBase"
+                            title="homeassistant.components.hue.v2.sensor.HueSensorBase"
+                            ><code
+                              class="xref py py-obj docutils literal notranslate"
+                              ><span class="pre">HueSensorBase</span></code
+                            ></a
+                          >
+                        </p>
+                        <p>Representation of a Hue Temperature sensor.</p>
+                        <dl class="py attribute">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueTemperatureSensor.entity_description"
+                          >
+                            <span class="sig-name descname"
+                              ><span class="pre">entity_description</span></span
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueTemperatureSensor.entity_description"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd></dd>
+                        </dl>
+
+                        <dl class="py property">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueTemperatureSensor.native_value"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">property</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">native_value</span></span
+                            ><em class="property"
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">float</span></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueTemperatureSensor.native_value"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd>
+                            <p>Return the value reported by the sensor.</p>
+                          </dd>
+                        </dl>
+                      </dd>
+                    </dl>
+
+                    <dl class="py class">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.v2.sensor.HueLightLevelSensor"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">class</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.v2.sensor.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">HueLightLevelSensor</span></span
+                        ><span class="sig-paren">(</span
+                        ><em class="sig-param"
+                          ><span class="n"><span class="pre">bridge</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><a
+                              class="reference internal"
+                              href="../../bridge/index.html#homeassistant.components.hue.bridge.HueBridge"
+                              title="homeassistant.components.hue.bridge.HueBridge"
+                              ><span class="pre"
+                                >homeassistant.components.hue.bridge.HueBridge</span
+                              ></a
+                            ></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">controller</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">ControllerType</span></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">resource</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">SensorType</span></span
+                          ></em
+                        ><span class="sig-paren">)</span
+                        ><a
+                          class="reference internal"
+                          href="../../../../../../_modules/homeassistant/components/hue/v2/sensor.html#HueLightLevelSensor"
+                          ><span class="viewcode-link"
+                            ><span class="pre">[source]</span></span
+                          ></a
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.v2.sensor.HueLightLevelSensor"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Bases:
+                          <a
+                            class="reference internal"
+                            href="#homeassistant.components.hue.v2.sensor.HueSensorBase"
+                            title="homeassistant.components.hue.v2.sensor.HueSensorBase"
+                            ><code
+                              class="xref py py-obj docutils literal notranslate"
+                              ><span class="pre">HueSensorBase</span></code
+                            ></a
+                          >
+                        </p>
+                        <p>
+                          Representation of a Hue LightLevel (illuminance)
+                          sensor.
+                        </p>
+                        <dl class="py attribute">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueLightLevelSensor.entity_description"
+                          >
+                            <span class="sig-name descname"
+                              ><span class="pre">entity_description</span></span
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueLightLevelSensor.entity_description"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd></dd>
+                        </dl>
+
+                        <dl class="py property">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueLightLevelSensor.native_value"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">property</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">native_value</span></span
+                            ><em class="property"
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">int</span></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueLightLevelSensor.native_value"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd>
+                            <p>Return the value reported by the sensor.</p>
+                          </dd>
+                        </dl>
+
+                        <dl class="py property">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueLightLevelSensor.extra_state_attributes"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">property</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre"
+                                >extra_state_attributes</span
+                              ></span
+                            ><em class="property"
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">dict</span
+                              ><span class="p"><span class="pre">[</span></span
+                              ><span class="pre">str</span
+                              ><span class="p"><span class="pre">,</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">Any</span
+                              ><span class="p"
+                                ><span class="pre">]</span></span
+                              ></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueLightLevelSensor.extra_state_attributes"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Return the optional state attributes.</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+
+                    <dl class="py class">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.v2.sensor.HueBatterySensor"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">class</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.v2.sensor.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre">HueBatterySensor</span></span
+                        ><span class="sig-paren">(</span
+                        ><em class="sig-param"
+                          ><span class="n"><span class="pre">bridge</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><a
+                              class="reference internal"
+                              href="../../bridge/index.html#homeassistant.components.hue.bridge.HueBridge"
+                              title="homeassistant.components.hue.bridge.HueBridge"
+                              ><span class="pre"
+                                >homeassistant.components.hue.bridge.HueBridge</span
+                              ></a
+                            ></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">controller</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">ControllerType</span></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">resource</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">SensorType</span></span
+                          ></em
+                        ><span class="sig-paren">)</span
+                        ><a
+                          class="reference internal"
+                          href="../../../../../../_modules/homeassistant/components/hue/v2/sensor.html#HueBatterySensor"
+                          ><span class="viewcode-link"
+                            ><span class="pre">[source]</span></span
+                          ></a
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.v2.sensor.HueBatterySensor"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Bases:
+                          <a
+                            class="reference internal"
+                            href="#homeassistant.components.hue.v2.sensor.HueSensorBase"
+                            title="homeassistant.components.hue.v2.sensor.HueSensorBase"
+                            ><code
+                              class="xref py py-obj docutils literal notranslate"
+                              ><span class="pre">HueSensorBase</span></code
+                            ></a
+                          >
+                        </p>
+                        <p>Representation of a Hue Battery sensor.</p>
+                        <dl class="py attribute">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueBatterySensor.entity_description"
+                          >
+                            <span class="sig-name descname"
+                              ><span class="pre">entity_description</span></span
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueBatterySensor.entity_description"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd></dd>
+                        </dl>
+
+                        <dl class="py property">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueBatterySensor.native_value"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">property</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">native_value</span></span
+                            ><em class="property"
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">int</span></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueBatterySensor.native_value"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd>
+                            <p>Return the value reported by the sensor.</p>
+                          </dd>
+                        </dl>
+
+                        <dl class="py property">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueBatterySensor.extra_state_attributes"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">property</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre"
+                                >extra_state_attributes</span
+                              ></span
+                            ><em class="property"
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">dict</span
+                              ><span class="p"><span class="pre">[</span></span
+                              ><span class="pre">str</span
+                              ><span class="p"><span class="pre">,</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">Any</span
+                              ><span class="p"
+                                ><span class="pre">]</span></span
+                              ></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueBatterySensor.extra_state_attributes"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Return the optional state attributes.</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+
+                    <dl class="py class">
+                      <dt
+                        class="sig sig-object py"
+                        id="homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor"
+                      >
+                        <em class="property"
+                          ><span class="k"><span class="pre">class</span></span
+                          ><span class="w"> </span></em
+                        ><span class="sig-prename descclassname"
+                          ><span class="pre"
+                            >homeassistant.components.hue.v2.sensor.</span
+                          ></span
+                        ><span class="sig-name descname"
+                          ><span class="pre"
+                            >HueZigbeeConnectivitySensor</span
+                          ></span
+                        ><span class="sig-paren">(</span
+                        ><em class="sig-param"
+                          ><span class="n"><span class="pre">bridge</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><a
+                              class="reference internal"
+                              href="../../bridge/index.html#homeassistant.components.hue.bridge.HueBridge"
+                              title="homeassistant.components.hue.bridge.HueBridge"
+                              ><span class="pre"
+                                >homeassistant.components.hue.bridge.HueBridge</span
+                              ></a
+                            ></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">controller</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">ControllerType</span></span
+                          ></em
+                        >,
+                        <em class="sig-param"
+                          ><span class="n"
+                            ><span class="pre">resource</span></span
+                          ><span class="p"><span class="pre">:</span></span
+                          ><span class="w"> </span
+                          ><span class="n"
+                            ><span class="pre">SensorType</span></span
+                          ></em
+                        ><span class="sig-paren">)</span
+                        ><a
+                          class="reference internal"
+                          href="../../../../../../_modules/homeassistant/components/hue/v2/sensor.html#HueZigbeeConnectivitySensor"
+                          ><span class="viewcode-link"
+                            ><span class="pre">[source]</span></span
+                          ></a
+                        ><a
+                          class="headerlink"
+                          href="#homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor"
+                          title="Link to this definition"
+                          ></a
+                        >
+                      </dt>
+                      <dd>
+                        <p>
+                          Bases:
+                          <a
+                            class="reference internal"
+                            href="#homeassistant.components.hue.v2.sensor.HueSensorBase"
+                            title="homeassistant.components.hue.v2.sensor.HueSensorBase"
+                            ><code
+                              class="xref py py-obj docutils literal notranslate"
+                              ><span class="pre">HueSensorBase</span></code
+                            ></a
+                          >
+                        </p>
+                        <p>
+                          Representation of a Hue ZigbeeConnectivity sensor.
+                        </p>
+                        <dl class="py attribute">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor.entity_description"
+                          >
+                            <span class="sig-name descname"
+                              ><span class="pre">entity_description</span></span
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor.entity_description"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd></dd>
+                        </dl>
+
+                        <dl class="py property">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor.native_value"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">property</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre">native_value</span></span
+                            ><em class="property"
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">str</span></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor.native_value"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd>
+                            <p>Return the value reported by the sensor.</p>
+                          </dd>
+                        </dl>
+
+                        <dl class="py property">
+                          <dt
+                            class="sig sig-object py"
+                            id="homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor.extra_state_attributes"
+                          >
+                            <em class="property"
+                              ><span class="k"
+                                ><span class="pre">property</span></span
+                              ><span class="w"> </span></em
+                            ><span class="sig-name descname"
+                              ><span class="pre"
+                                >extra_state_attributes</span
+                              ></span
+                            ><em class="property"
+                              ><span class="p"><span class="pre">:</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">dict</span
+                              ><span class="p"><span class="pre">[</span></span
+                              ><span class="pre">str</span
+                              ><span class="p"><span class="pre">,</span></span
+                              ><span class="w"> </span
+                              ><span class="pre">Any</span
+                              ><span class="p"
+                                ><span class="pre">]</span></span
+                              ></em
+                            ><a
+                              class="headerlink"
+                              href="#homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor.extra_state_attributes"
+                              title="Link to this definition"
+                              ></a
+                            >
+                          </dt>
+                          <dd><p>Return the optional state attributes.</p></dd>
+                        </dl>
+                      </dd>
+                    </dl>
+                  </section>
+                </section>
+              </div>
+            </div>
+            <footer>
+              <div
+                class="rst-footer-buttons"
+                role="navigation"
+                aria-label="Footer"
+              >
+                <a
+                  href="../light/index.html"
+                  class="btn btn-neutral float-left"
+                  title="homeassistant.components.hue.v2.light"
+                  accesskey="p"
+                  rel="prev"
+                  ><span
+                    class="fa fa-arrow-circle-left"
+                    aria-hidden="true"
+                  ></span>
+                  Previous</a
+                >
+              </div>
+
+              <hr />
+
+              <div role="contentinfo">
+                <p>&#169; Copyright 2025, Clara Simonsson.</p>
+              </div>
+
+              Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using
+              a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme"
+                >theme</a
+              >
+              provided by <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+homeassistant.components.hue.migration
+======================================
+
+.. py:module:: homeassistant.components.hue.migration
+
+.. autoapi-nested-parse::
+
+   Various helpers to handle config entry and api schema migrations.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.migration.LOGGER
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.migration.check_migration
+   homeassistant.components.hue.migration.handle_v2_migration
+
+
+Module Contents
+---------------
+
+.. py:data:: LOGGER
+
+.. py:function:: check_migration(hass: homeassistant.core.HomeAssistant, entry: homeassistant.components.hue.bridge.HueConfigEntry) -> None
+   :async:
+
+
+   Check if config entry needs any migration actions.
+
+
+.. py:function:: handle_v2_migration(hass: homeassistant.core.HomeAssistant, entry: homeassistant.components.hue.bridge.HueConfigEntry) -> None
+   :async:
+
+
+   Perform migration of devices and entities to V2 Id's.
+
+

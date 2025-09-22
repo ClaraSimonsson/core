@@ -1,0 +1,365 @@
+<!doctype html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      homeassistant.components.hue.v2.sensor &mdash; homeassistant documentation
+    </title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/pygments.css?v=b86133f3"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/css/theme.css?v=e59714d7"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/graphviz.css?v=4ae1632d"
+    />
+
+    <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  </head>
+
+  <body class="wy-body-for-nav">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../../index.html" class="icon icon-home">
+              homeassistant
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+            </div>
+          </div>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <p class="caption" role="heading">
+              <span class="caption-text">Contents:</span>
+            </p>
+            <ul>
+              <li class="toctree-l1">
+                <a
+                  class="reference internal"
+                  href="../../../../../autoapi/homeassistant/components/hue/index.html"
+                  >homeassistant.components.hue</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">homeassistant</a>
+        </nav>
+
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="Page navigation">
+              <ul class="wy-breadcrumbs">
+                <li>
+                  <a
+                    href="../../../../../index.html"
+                    class="icon icon-home"
+                    aria-label="Home"
+                  ></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../../../index.html">Module code</a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../hue.html">homeassistant.components.hue</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  homeassistant.components.hue.v2.sensor
+                </li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div itemprop="articleBody">
+                <h1>Source code for homeassistant.components.hue.v2.sensor</h1>
+                <div class="highlight">
+                  <pre>
+<span></span><span class="sd">&quot;&quot;&quot;Support for Hue sensors.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBridgeV2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.controllers.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.controllers.sensors</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DevicePowerController</span><span class="p">,</span>
+    <span class="n">LightLevelController</span><span class="p">,</span>
+    <span class="n">SensorsController</span><span class="p">,</span>
+    <span class="n">TemperatureController</span><span class="p">,</span>
+    <span class="n">ZigbeeConnectivityController</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.device_power</span><span class="w"> </span><span class="kn">import</span> <span class="n">DevicePower</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.light_level</span><span class="w"> </span><span class="kn">import</span> <span class="n">LightLevel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.temperature</span><span class="w"> </span><span class="kn">import</span> <span class="n">Temperature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.zigbee_connectivity</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZigbeeConnectivity</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.components.sensor</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SensorDeviceClass</span><span class="p">,</span>
+    <span class="n">SensorEntity</span><span class="p">,</span>
+    <span class="n">SensorEntityDescription</span><span class="p">,</span>
+    <span class="n">SensorStateClass</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.const</span><span class="w"> </span><span class="kn">import</span> <span class="n">LIGHT_LUX</span><span class="p">,</span> <span class="n">PERCENTAGE</span><span class="p">,</span> <span class="n">EntityCategory</span><span class="p">,</span> <span class="n">UnitOfTemperature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">HomeAssistant</span><span class="p">,</span> <span class="n">callback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.entity_platform</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddConfigEntryEntitiesCallback</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..bridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBridge</span><span class="p">,</span> <span class="n">HueConfigEntry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.entity</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBaseEntity</span>
+
+<span class="nb">type</span> <span class="n">SensorType</span> <span class="o">=</span> <span class="n">DevicePower</span> <span class="o">|</span> <span class="n">LightLevel</span> <span class="o">|</span> <span class="n">Temperature</span> <span class="o">|</span> <span class="n">ZigbeeConnectivity</span>
+<span class="nb">type</span> <span class="n">ControllerType</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">DevicePowerController</span>
+    <span class="o">|</span> <span class="n">LightLevelController</span>
+    <span class="o">|</span> <span class="n">TemperatureController</span>
+    <span class="o">|</span> <span class="n">ZigbeeConnectivityController</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="async_setup_entry">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/sensor/index.html#homeassistant.components.hue.v2.sensor.async_setup_entry">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_setup_entry</span><span class="p">(</span>
+    <span class="n">hass</span><span class="p">:</span> <span class="n">HomeAssistant</span><span class="p">,</span>
+    <span class="n">config_entry</span><span class="p">:</span> <span class="n">HueConfigEntry</span><span class="p">,</span>
+    <span class="n">async_add_entities</span><span class="p">:</span> <span class="n">AddConfigEntryEntitiesCallback</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up Hue Sensors from Config Entry.&quot;&quot;&quot;</span>
+    <span class="n">bridge</span> <span class="o">=</span> <span class="n">config_entry</span><span class="o">.</span><span class="n">runtime_data</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">HueBridgeV2</span> <span class="o">=</span> <span class="n">bridge</span><span class="o">.</span><span class="n">api</span>
+    <span class="n">ctrl_base</span><span class="p">:</span> <span class="n">SensorsController</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">sensors</span>
+
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_items</span><span class="p">(</span><span class="n">controller</span><span class="p">:</span> <span class="n">ControllerType</span><span class="p">,</span> <span class="n">sensor_class</span><span class="p">:</span> <span class="n">SensorType</span><span class="p">):</span>
+        <span class="n">make_sensor_entity</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">sensor_class</span><span class="p">,</span> <span class="n">bridge</span><span class="p">,</span> <span class="n">controller</span><span class="p">)</span>
+
+        <span class="nd">@callback</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">async_add_sensor</span><span class="p">(</span><span class="n">event_type</span><span class="p">:</span> <span class="n">EventType</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">SensorType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Add Hue Sensor.&quot;&quot;&quot;</span>
+            <span class="n">async_add_entities</span><span class="p">([</span><span class="n">make_sensor_entity</span><span class="p">(</span><span class="n">resource</span><span class="p">)])</span>
+
+        <span class="c1"># add all current items in controller</span>
+        <span class="n">async_add_entities</span><span class="p">(</span><span class="n">make_sensor_entity</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span> <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="n">controller</span><span class="p">)</span>
+
+        <span class="c1"># register listener for new sensors</span>
+        <span class="n">config_entry</span><span class="o">.</span><span class="n">async_on_unload</span><span class="p">(</span>
+            <span class="n">controller</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+                <span class="n">async_add_sensor</span><span class="p">,</span> <span class="n">event_filter</span><span class="o">=</span><span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_ADDED</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="c1"># setup for each sensor-type hue resource</span>
+    <span class="n">register_items</span><span class="p">(</span><span class="n">ctrl_base</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="n">HueTemperatureSensor</span><span class="p">)</span>
+    <span class="n">register_items</span><span class="p">(</span><span class="n">ctrl_base</span><span class="o">.</span><span class="n">light_level</span><span class="p">,</span> <span class="n">HueLightLevelSensor</span><span class="p">)</span>
+    <span class="n">register_items</span><span class="p">(</span><span class="n">ctrl_base</span><span class="o">.</span><span class="n">device_power</span><span class="p">,</span> <span class="n">HueBatterySensor</span><span class="p">)</span>
+    <span class="n">register_items</span><span class="p">(</span><span class="n">ctrl_base</span><span class="o">.</span><span class="n">zigbee_connectivity</span><span class="p">,</span> <span class="n">HueZigbeeConnectivitySensor</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># pylint: disable-next=hass-enforce-class-module</span>
+<div class="viewcode-block" id="HueSensorBase">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/sensor/index.html#homeassistant.components.hue.v2.sensor.HueSensorBase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HueSensorBase</span><span class="p">(</span><span class="n">HueBaseEntity</span><span class="p">,</span> <span class="n">SensorEntity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Hue sensor.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">bridge</span><span class="p">:</span> <span class="n">HueBridge</span><span class="p">,</span>
+        <span class="n">controller</span><span class="p">:</span> <span class="n">ControllerType</span><span class="p">,</span>
+        <span class="n">resource</span><span class="p">:</span> <span class="n">SensorType</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the light.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">bridge</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="n">resource</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource</span> <span class="o">=</span> <span class="n">resource</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span></div>
+
+
+
+<span class="c1"># pylint: disable-next=hass-enforce-class-module</span>
+<div class="viewcode-block" id="HueTemperatureSensor">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/sensor/index.html#homeassistant.components.hue.v2.sensor.HueTemperatureSensor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HueTemperatureSensor</span><span class="p">(</span><span class="n">HueSensorBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Hue Temperature sensor.&quot;&quot;&quot;</span>
+
+    <span class="n">entity_description</span> <span class="o">=</span> <span class="n">SensorEntityDescription</span><span class="p">(</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;temperature_sensor&quot;</span><span class="p">,</span>
+        <span class="n">device_class</span><span class="o">=</span><span class="n">SensorDeviceClass</span><span class="o">.</span><span class="n">TEMPERATURE</span><span class="p">,</span>
+        <span class="n">native_unit_of_measurement</span><span class="o">=</span><span class="n">UnitOfTemperature</span><span class="o">.</span><span class="n">CELSIUS</span><span class="p">,</span>
+        <span class="n">has_entity_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">state_class</span><span class="o">=</span><span class="n">SensorStateClass</span><span class="o">.</span><span class="n">MEASUREMENT</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">native_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the value reported by the sensor.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># pylint: disable-next=hass-enforce-class-module</span>
+<div class="viewcode-block" id="HueLightLevelSensor">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/sensor/index.html#homeassistant.components.hue.v2.sensor.HueLightLevelSensor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HueLightLevelSensor</span><span class="p">(</span><span class="n">HueSensorBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Hue LightLevel (illuminance) sensor.&quot;&quot;&quot;</span>
+
+    <span class="n">entity_description</span> <span class="o">=</span> <span class="n">SensorEntityDescription</span><span class="p">(</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;lightlevel_sensor&quot;</span><span class="p">,</span>
+        <span class="n">device_class</span><span class="o">=</span><span class="n">SensorDeviceClass</span><span class="o">.</span><span class="n">ILLUMINANCE</span><span class="p">,</span>
+        <span class="n">native_unit_of_measurement</span><span class="o">=</span><span class="n">LIGHT_LUX</span><span class="p">,</span>
+        <span class="n">has_entity_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">state_class</span><span class="o">=</span><span class="n">SensorStateClass</span><span class="o">.</span><span class="n">MEASUREMENT</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">native_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the value reported by the sensor.&quot;&quot;&quot;</span>
+        <span class="c1"># Light level in 10000 log10 (lux) +1 measured by sensor. Logarithm</span>
+        <span class="c1"># scale used because the human eye adjusts to light levels and small</span>
+        <span class="c1"># changes at low lux levels are more noticeable than at high lux</span>
+        <span class="c1"># levels.</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">light</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10000</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extra_state_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the optional state attributes.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;light_level&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">light</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+
+<span class="c1"># pylint: disable-next=hass-enforce-class-module</span>
+<div class="viewcode-block" id="HueBatterySensor">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/sensor/index.html#homeassistant.components.hue.v2.sensor.HueBatterySensor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HueBatterySensor</span><span class="p">(</span><span class="n">HueSensorBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Hue Battery sensor.&quot;&quot;&quot;</span>
+
+    <span class="n">entity_description</span> <span class="o">=</span> <span class="n">SensorEntityDescription</span><span class="p">(</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;battery_sensor&quot;</span><span class="p">,</span>
+        <span class="n">device_class</span><span class="o">=</span><span class="n">SensorDeviceClass</span><span class="o">.</span><span class="n">BATTERY</span><span class="p">,</span>
+        <span class="n">native_unit_of_measurement</span><span class="o">=</span><span class="n">PERCENTAGE</span><span class="p">,</span>
+        <span class="n">has_entity_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">state_class</span><span class="o">=</span><span class="n">SensorStateClass</span><span class="o">.</span><span class="n">MEASUREMENT</span><span class="p">,</span>
+        <span class="n">entity_category</span><span class="o">=</span><span class="n">EntityCategory</span><span class="o">.</span><span class="n">DIAGNOSTIC</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">native_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the value reported by the sensor.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">power_state</span><span class="o">.</span><span class="n">battery_level</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extra_state_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the optional state attributes.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">power_state</span><span class="o">.</span><span class="n">battery_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;battery_state&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">power_state</span><span class="o">.</span><span class="n">battery_state</span><span class="o">.</span><span class="n">value</span><span class="p">}</span></div>
+
+
+
+<span class="c1"># pylint: disable-next=hass-enforce-class-module</span>
+<div class="viewcode-block" id="HueZigbeeConnectivitySensor">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/sensor/index.html#homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HueZigbeeConnectivitySensor</span><span class="p">(</span><span class="n">HueSensorBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Hue ZigbeeConnectivity sensor.&quot;&quot;&quot;</span>
+
+    <span class="n">entity_description</span> <span class="o">=</span> <span class="n">SensorEntityDescription</span><span class="p">(</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;zigbee_connectivity_sensor&quot;</span><span class="p">,</span>
+        <span class="n">device_class</span><span class="o">=</span><span class="n">SensorDeviceClass</span><span class="o">.</span><span class="n">ENUM</span><span class="p">,</span>
+        <span class="n">has_entity_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">entity_category</span><span class="o">=</span><span class="n">EntityCategory</span><span class="o">.</span><span class="n">DIAGNOSTIC</span><span class="p">,</span>
+        <span class="n">translation_key</span><span class="o">=</span><span class="s2">&quot;zigbee_connectivity&quot;</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;connected&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;disconnected&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;connectivity_issue&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;unidirectional_incoming&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">entity_registry_enabled_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">native_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the value reported by the sensor.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extra_state_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the optional state attributes.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;mac_address&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">mac_address</span><span class="p">}</span></div>
+
+</pre>
+                </div>
+              </div>
+            </div>
+            <footer>
+              <hr />
+
+              <div role="contentinfo">
+                <p>&#169; Copyright 2025, Clara Simonsson.</p>
+              </div>
+
+              Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using
+              a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme"
+                >theme</a
+              >
+              provided by <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
+    </script>
+  </body>
+</html>

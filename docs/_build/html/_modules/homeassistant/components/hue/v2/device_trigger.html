@@ -1,0 +1,306 @@
+<!doctype html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      homeassistant.components.hue.v2.device_trigger &mdash; homeassistant
+      documentation
+    </title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/pygments.css?v=b86133f3"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/css/theme.css?v=e59714d7"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/graphviz.css?v=4ae1632d"
+    />
+
+    <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  </head>
+
+  <body class="wy-body-for-nav">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../../index.html" class="icon icon-home">
+              homeassistant
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+            </div>
+          </div>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <p class="caption" role="heading">
+              <span class="caption-text">Contents:</span>
+            </p>
+            <ul>
+              <li class="toctree-l1">
+                <a
+                  class="reference internal"
+                  href="../../../../../autoapi/homeassistant/components/hue/index.html"
+                  >homeassistant.components.hue</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">homeassistant</a>
+        </nav>
+
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="Page navigation">
+              <ul class="wy-breadcrumbs">
+                <li>
+                  <a
+                    href="../../../../../index.html"
+                    class="icon icon-home"
+                    aria-label="Home"
+                  ></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../../../index.html">Module code</a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../hue.html">homeassistant.components.hue</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  homeassistant.components.hue.v2.device_trigger
+                </li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div itemprop="articleBody">
+                <h1>
+                  Source code for homeassistant.components.hue.v2.device_trigger
+                </h1>
+                <div class="highlight">
+                  <pre>
+<span></span><span class="sd">&quot;&quot;&quot;Provides device automations for Philips Hue events.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.resource</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResourceTypes</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">voluptuous</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">vol</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.components.device_automation</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEVICE_TRIGGER_BASE_SCHEMA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.components.homeassistant.triggers</span><span class="w"> </span><span class="kn">import</span> <span class="n">event</span> <span class="k">as</span> <span class="n">event_trigger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.const</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CONF_DEVICE_ID</span><span class="p">,</span>
+    <span class="n">CONF_DOMAIN</span><span class="p">,</span>
+    <span class="n">CONF_PLATFORM</span><span class="p">,</span>
+    <span class="n">CONF_TYPE</span><span class="p">,</span>
+    <span class="n">CONF_UNIQUE_ID</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">CALLBACK_TYPE</span><span class="p">,</span> <span class="n">callback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.device_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceEntry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigType</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..const</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ATTR_HUE_EVENT</span><span class="p">,</span>
+    <span class="n">CONF_SUBTYPE</span><span class="p">,</span>
+    <span class="n">DEFAULT_BUTTON_EVENT_TYPES</span><span class="p">,</span>
+    <span class="n">DEFAULT_ROTARY_EVENT_SUBTYPES</span><span class="p">,</span>
+    <span class="n">DEFAULT_ROTARY_EVENT_TYPES</span><span class="p">,</span>
+    <span class="n">DEVICE_SPECIFIC_EVENT_TYPES</span><span class="p">,</span>
+    <span class="n">DOMAIN</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBridgeV2</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.trigger</span><span class="w"> </span><span class="kn">import</span> <span class="n">TriggerActionType</span><span class="p">,</span> <span class="n">TriggerInfo</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">..bridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBridge</span>
+
+<span class="n">TRIGGER_SCHEMA</span> <span class="o">=</span> <span class="n">DEVICE_TRIGGER_BASE_SCHEMA</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="n">vol</span><span class="o">.</span><span class="n">Required</span><span class="p">(</span><span class="n">CONF_TYPE</span><span class="p">):</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">vol</span><span class="o">.</span><span class="n">Required</span><span class="p">(</span><span class="n">CONF_SUBTYPE</span><span class="p">):</span> <span class="n">vol</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
+        <span class="n">vol</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">CONF_UNIQUE_ID</span><span class="p">):</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="async_validate_trigger_config">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/device_trigger/index.html#homeassistant.components.hue.v2.device_trigger.async_validate_trigger_config">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_validate_trigger_config</span><span class="p">(</span>
+    <span class="n">bridge</span><span class="p">:</span> <span class="n">HueBridge</span><span class="p">,</span>
+    <span class="n">device_entry</span><span class="p">:</span> <span class="n">DeviceEntry</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">ConfigType</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigType</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate config.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">TRIGGER_SCHEMA</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="async_attach_trigger">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/device_trigger/index.html#homeassistant.components.hue.v2.device_trigger.async_attach_trigger">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_attach_trigger</span><span class="p">(</span>
+    <span class="n">bridge</span><span class="p">:</span> <span class="n">HueBridge</span><span class="p">,</span>
+    <span class="n">device_entry</span><span class="p">:</span> <span class="n">DeviceEntry</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">ConfigType</span><span class="p">,</span>
+    <span class="n">action</span><span class="p">:</span> <span class="n">TriggerActionType</span><span class="p">,</span>
+    <span class="n">trigger_info</span><span class="p">:</span> <span class="n">TriggerInfo</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CALLBACK_TYPE</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Listen for state changes based on configuration.&quot;&quot;&quot;</span>
+    <span class="n">hass</span> <span class="o">=</span> <span class="n">bridge</span><span class="o">.</span><span class="n">hass</span>
+    <span class="n">event_config</span> <span class="o">=</span> <span class="n">event_trigger</span><span class="o">.</span><span class="n">TRIGGER_SCHEMA</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="n">event_trigger</span><span class="o">.</span><span class="n">CONF_PLATFORM</span><span class="p">:</span> <span class="s2">&quot;event&quot;</span><span class="p">,</span>
+            <span class="n">event_trigger</span><span class="o">.</span><span class="n">CONF_EVENT_TYPE</span><span class="p">:</span> <span class="n">ATTR_HUE_EVENT</span><span class="p">,</span>
+            <span class="n">event_trigger</span><span class="o">.</span><span class="n">CONF_EVENT_DATA</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">CONF_DEVICE_ID</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="n">CONF_DEVICE_ID</span><span class="p">],</span>
+                <span class="n">CONF_TYPE</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="n">CONF_TYPE</span><span class="p">],</span>
+                <span class="n">CONF_SUBTYPE</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="n">CONF_SUBTYPE</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">event_trigger</span><span class="o">.</span><span class="n">async_attach_trigger</span><span class="p">(</span>
+        <span class="n">hass</span><span class="p">,</span> <span class="n">event_config</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">trigger_info</span><span class="p">,</span> <span class="n">platform_type</span><span class="o">=</span><span class="s2">&quot;device&quot;</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="async_get_triggers">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/device_trigger/index.html#homeassistant.components.hue.v2.device_trigger.async_get_triggers">[docs]</a>
+<span class="nd">@callback</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">async_get_triggers</span><span class="p">(</span>
+    <span class="n">bridge</span><span class="p">:</span> <span class="n">HueBridge</span><span class="p">,</span> <span class="n">device_entry</span><span class="p">:</span> <span class="n">DeviceEntry</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return device triggers for device on `v2` bridge.&quot;&quot;&quot;</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">HueBridgeV2</span> <span class="o">=</span> <span class="n">bridge</span><span class="o">.</span><span class="n">api</span>
+
+    <span class="c1"># Get Hue device id from device identifier</span>
+    <span class="n">hue_dev_id</span> <span class="o">=</span> <span class="n">get_hue_device_id</span><span class="p">(</span><span class="n">device_entry</span><span class="p">)</span>
+    <span class="c1"># extract triggers from all button resources of this Hue device</span>
+    <span class="n">triggers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">model_id</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="n">hue_dev_id</span><span class="p">]</span><span class="o">.</span><span class="n">product_data</span><span class="o">.</span><span class="n">product_name</span>
+
+    <span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="n">api</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">get_sensors</span><span class="p">(</span><span class="n">hue_dev_id</span><span class="p">):</span>
+        <span class="c1"># button triggers</span>
+        <span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ResourceTypes</span><span class="o">.</span><span class="n">BUTTON</span><span class="p">:</span>
+            <span class="n">triggers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="n">CONF_DEVICE_ID</span><span class="p">:</span> <span class="n">device_entry</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">CONF_DOMAIN</span><span class="p">:</span> <span class="n">DOMAIN</span><span class="p">,</span>
+                    <span class="n">CONF_PLATFORM</span><span class="p">:</span> <span class="s2">&quot;device&quot;</span><span class="p">,</span>
+                    <span class="n">CONF_TYPE</span><span class="p">:</span> <span class="n">event_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">CONF_SUBTYPE</span><span class="p">:</span> <span class="n">resource</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">control_id</span><span class="p">,</span>
+                    <span class="n">CONF_UNIQUE_ID</span><span class="p">:</span> <span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="k">for</span> <span class="n">event_type</span> <span class="ow">in</span> <span class="n">DEVICE_SPECIFIC_EVENT_TYPES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">model_id</span><span class="p">,</span> <span class="n">DEFAULT_BUTTON_EVENT_TYPES</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="c1"># relative_rotary triggers</span>
+        <span class="k">elif</span> <span class="n">resource</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ResourceTypes</span><span class="o">.</span><span class="n">RELATIVE_ROTARY</span><span class="p">:</span>
+            <span class="n">triggers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="n">CONF_DEVICE_ID</span><span class="p">:</span> <span class="n">device_entry</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">CONF_DOMAIN</span><span class="p">:</span> <span class="n">DOMAIN</span><span class="p">,</span>
+                    <span class="n">CONF_PLATFORM</span><span class="p">:</span> <span class="s2">&quot;device&quot;</span><span class="p">,</span>
+                    <span class="n">CONF_TYPE</span><span class="p">:</span> <span class="n">event_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">CONF_SUBTYPE</span><span class="p">:</span> <span class="n">sub_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">CONF_UNIQUE_ID</span><span class="p">:</span> <span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="k">for</span> <span class="n">event_type</span> <span class="ow">in</span> <span class="n">DEFAULT_ROTARY_EVENT_TYPES</span>
+                <span class="k">for</span> <span class="n">sub_type</span> <span class="ow">in</span> <span class="n">DEFAULT_ROTARY_EVENT_SUBTYPES</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">triggers</span></div>
+
+
+
+<div class="viewcode-block" id="get_hue_device_id">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/device_trigger/index.html#homeassistant.components.hue.v2.device_trigger.get_hue_device_id">[docs]</a>
+<span class="nd">@callback</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_hue_device_id</span><span class="p">(</span><span class="n">device_entry</span><span class="p">:</span> <span class="n">DeviceEntry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get Hue device id from device entry.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">identifier</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">identifier</span> <span class="ow">in</span> <span class="n">device_entry</span><span class="o">.</span><span class="n">identifiers</span>
+            <span class="k">if</span> <span class="n">identifier</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">DOMAIN</span>
+            <span class="ow">and</span> <span class="s2">&quot;:&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">identifier</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># filter out v1 mac id</span>
+        <span class="p">),</span>
+        <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre>
+                </div>
+              </div>
+            </div>
+            <footer>
+              <hr />
+
+              <div role="contentinfo">
+                <p>&#169; Copyright 2025, Clara Simonsson.</p>
+              </div>
+
+              Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using
+              a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme"
+                >theme</a
+              >
+              provided by <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
+    </script>
+  </body>
+</html>

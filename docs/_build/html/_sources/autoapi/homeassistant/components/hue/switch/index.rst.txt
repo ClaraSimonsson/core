@@ -1,0 +1,126 @@
+homeassistant.components.hue.switch
+===================================
+
+.. py:module:: homeassistant.components.hue.switch
+
+.. autoapi-nested-parse::
+
+   Support for switch platform for Hue resources (V2 only).
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.switch.HueResourceEnabledEntity
+   homeassistant.components.hue.switch.HueBehaviorInstanceEnabledEntity
+   homeassistant.components.hue.switch.HueMotionSensorEnabledEntity
+   homeassistant.components.hue.switch.HueLightSensorEnabledEntity
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.switch.async_setup_entry
+
+
+Module Contents
+---------------
+
+.. py:function:: async_setup_entry(hass: homeassistant.core.HomeAssistant, config_entry: homeassistant.components.hue.bridge.HueConfigEntry, async_add_entities: homeassistant.helpers.entity_platform.AddConfigEntryEntitiesCallback) -> None
+   :async:
+
+
+   Set up Hue switch platform from Hue resources.
+
+
+.. py:class:: HueResourceEnabledEntity(bridge: homeassistant.components.hue.bridge.HueBridge, controller: aiohue.v2.controllers.base.BaseResourcesController, resource: HueResource)
+
+   Bases: :py:obj:`homeassistant.components.hue.v2.entity.HueBaseEntity`, :py:obj:`homeassistant.components.switch.SwitchEntity`
+
+
+   Representation of a Switch entity from a Hue resource that can be toggled enabled.
+
+
+   .. py:attribute:: controller
+      :type:  aiohue.v2.controllers.config.BehaviorInstanceController | aiohue.v2.controllers.sensors.LightLevelController | aiohue.v2.controllers.sensors.MotionController
+
+
+   .. py:attribute:: resource
+      :type:  aiohue.v2.controllers.config.BehaviorInstance | aiohue.v2.controllers.sensors.LightLevel | aiohue.v2.controllers.sensors.Motion
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: is_on
+      :type: bool
+
+
+      Return true if the switch is on.
+
+
+   .. py:method:: async_turn_on(**kwargs: Any) -> None
+      :async:
+
+
+      Turn the entity on.
+
+
+
+   .. py:method:: async_turn_off(**kwargs: Any) -> None
+      :async:
+
+
+      Turn the entity on.
+
+
+
+.. py:class:: HueBehaviorInstanceEnabledEntity(bridge: homeassistant.components.hue.bridge.HueBridge, controller: aiohue.v2.controllers.base.BaseResourcesController, resource: HueResource)
+
+   Bases: :py:obj:`HueResourceEnabledEntity`
+
+
+   Representation of a Switch entity to enable/disable a Hue Behavior Instance.
+
+
+   .. py:attribute:: resource
+      :type:  aiohue.v2.controllers.config.BehaviorInstance
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: name
+      :type: str
+
+
+      Return name for this entity.
+
+
+.. py:class:: HueMotionSensorEnabledEntity(bridge: homeassistant.components.hue.bridge.HueBridge, controller: aiohue.v2.controllers.base.BaseResourcesController, resource: HueResource)
+
+   Bases: :py:obj:`HueResourceEnabledEntity`
+
+
+   Representation of a Switch entity to enable/disable a Hue motion sensor.
+
+
+   .. py:attribute:: entity_description
+
+
+.. py:class:: HueLightSensorEnabledEntity(bridge: homeassistant.components.hue.bridge.HueBridge, controller: aiohue.v2.controllers.base.BaseResourcesController, resource: HueResource)
+
+   Bases: :py:obj:`HueResourceEnabledEntity`
+
+
+   Representation of a Switch entity to enable/disable a Hue light sensor.
+
+
+   .. py:attribute:: entity_description
+
+

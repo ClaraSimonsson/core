@@ -1,0 +1,29 @@
+homeassistant.components.hue.light
+==================================
+
+.. py:module:: homeassistant.components.hue.light
+
+.. autoapi-nested-parse::
+
+   Support for Hue lights.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.light.async_setup_entry
+
+
+Module Contents
+---------------
+
+.. py:function:: async_setup_entry(hass: homeassistant.core.HomeAssistant, config_entry: homeassistant.components.hue.bridge.HueConfigEntry, async_add_entities: homeassistant.helpers.entity_platform.AddConfigEntryEntitiesCallback) -> None
+   :async:
+
+
+   Set up light entities.
+
+

@@ -1,0 +1,54 @@
+homeassistant.components.hue.v2.hue_event
+=========================================
+
+.. py:module:: homeassistant.components.hue.v2.hue_event
+
+.. autoapi-nested-parse::
+
+   Handle forward of events transmitted by Hue devices to HASS.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.hue_event.CONF_CONTROL_ID
+   homeassistant.components.hue.v2.hue_event.CONF_DURATION
+   homeassistant.components.hue.v2.hue_event.CONF_STEPS
+   homeassistant.components.hue.v2.hue_event.LOGGER
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.hue_event.async_setup_hue_events
+
+
+Module Contents
+---------------
+
+.. py:data:: CONF_CONTROL_ID
+   :value: 'control_id'
+
+
+.. py:data:: CONF_DURATION
+   :value: 'duration'
+
+
+.. py:data:: CONF_STEPS
+   :value: 'steps'
+
+
+.. py:data:: LOGGER
+
+.. py:function:: async_setup_hue_events(bridge: homeassistant.components.hue.bridge.HueBridge)
+   :async:
+
+
+   Manage listeners for stateless Hue sensors that emit events.
+
+

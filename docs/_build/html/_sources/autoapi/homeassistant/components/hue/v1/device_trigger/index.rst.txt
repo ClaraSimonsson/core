@@ -1,0 +1,182 @@
+homeassistant.components.hue.v1.device_trigger
+==============================================
+
+.. py:module:: homeassistant.components.hue.v1.device_trigger
+
+.. autoapi-nested-parse::
+
+   Provides device automations for Philips Hue events in V1 bridge/api.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.device_trigger.TRIGGER_SCHEMA
+   homeassistant.components.hue.v1.device_trigger.CONF_SHORT_PRESS
+   homeassistant.components.hue.v1.device_trigger.CONF_SHORT_RELEASE
+   homeassistant.components.hue.v1.device_trigger.CONF_LONG_RELEASE
+   homeassistant.components.hue.v1.device_trigger.CONF_DOUBLE_SHORT_RELEASE
+   homeassistant.components.hue.v1.device_trigger.CONF_DOUBLE_LONG_RELEASE
+   homeassistant.components.hue.v1.device_trigger.CONF_TURN_ON
+   homeassistant.components.hue.v1.device_trigger.CONF_TURN_OFF
+   homeassistant.components.hue.v1.device_trigger.CONF_DIM_UP
+   homeassistant.components.hue.v1.device_trigger.CONF_DIM_DOWN
+   homeassistant.components.hue.v1.device_trigger.CONF_BUTTON_1
+   homeassistant.components.hue.v1.device_trigger.CONF_BUTTON_2
+   homeassistant.components.hue.v1.device_trigger.CONF_BUTTON_3
+   homeassistant.components.hue.v1.device_trigger.CONF_BUTTON_4
+   homeassistant.components.hue.v1.device_trigger.CONF_DOUBLE_BUTTON_1
+   homeassistant.components.hue.v1.device_trigger.CONF_DOUBLE_BUTTON_2
+   homeassistant.components.hue.v1.device_trigger.HUE_DIMMER_REMOTE_MODEL
+   homeassistant.components.hue.v1.device_trigger.HUE_DIMMER_REMOTE
+   homeassistant.components.hue.v1.device_trigger.HUE_BUTTON_REMOTE_MODEL
+   homeassistant.components.hue.v1.device_trigger.HUE_BUTTON_REMOTE
+   homeassistant.components.hue.v1.device_trigger.HUE_WALL_REMOTE_MODEL
+   homeassistant.components.hue.v1.device_trigger.HUE_WALL_REMOTE
+   homeassistant.components.hue.v1.device_trigger.HUE_TAP_REMOTE_MODEL
+   homeassistant.components.hue.v1.device_trigger.HUE_TAP_REMOTE
+   homeassistant.components.hue.v1.device_trigger.HUE_FOHSWITCH_REMOTE_MODEL
+   homeassistant.components.hue.v1.device_trigger.HUE_FOHSWITCH_REMOTE
+   homeassistant.components.hue.v1.device_trigger.REMOTES
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v1.device_trigger._get_hue_event_from_device_id
+   homeassistant.components.hue.v1.device_trigger.async_validate_trigger_config
+   homeassistant.components.hue.v1.device_trigger.async_attach_trigger
+   homeassistant.components.hue.v1.device_trigger.async_get_triggers
+
+
+Module Contents
+---------------
+
+.. py:data:: TRIGGER_SCHEMA
+
+.. py:data:: CONF_SHORT_PRESS
+   :value: 'remote_button_short_press'
+
+
+.. py:data:: CONF_SHORT_RELEASE
+   :value: 'remote_button_short_release'
+
+
+.. py:data:: CONF_LONG_RELEASE
+   :value: 'remote_button_long_release'
+
+
+.. py:data:: CONF_DOUBLE_SHORT_RELEASE
+   :value: 'remote_double_button_short_press'
+
+
+.. py:data:: CONF_DOUBLE_LONG_RELEASE
+   :value: 'remote_double_button_long_press'
+
+
+.. py:data:: CONF_TURN_ON
+   :value: 'turn_on'
+
+
+.. py:data:: CONF_TURN_OFF
+   :value: 'turn_off'
+
+
+.. py:data:: CONF_DIM_UP
+   :value: 'dim_up'
+
+
+.. py:data:: CONF_DIM_DOWN
+   :value: 'dim_down'
+
+
+.. py:data:: CONF_BUTTON_1
+   :value: 'button_1'
+
+
+.. py:data:: CONF_BUTTON_2
+   :value: 'button_2'
+
+
+.. py:data:: CONF_BUTTON_3
+   :value: 'button_3'
+
+
+.. py:data:: CONF_BUTTON_4
+   :value: 'button_4'
+
+
+.. py:data:: CONF_DOUBLE_BUTTON_1
+   :value: 'double_buttons_1_3'
+
+
+.. py:data:: CONF_DOUBLE_BUTTON_2
+   :value: 'double_buttons_2_4'
+
+
+.. py:data:: HUE_DIMMER_REMOTE_MODEL
+   :value: 'Hue dimmer switch'
+
+
+.. py:data:: HUE_DIMMER_REMOTE
+
+.. py:data:: HUE_BUTTON_REMOTE_MODEL
+   :value: 'Hue Smart button'
+
+
+.. py:data:: HUE_BUTTON_REMOTE
+
+.. py:data:: HUE_WALL_REMOTE_MODEL
+   :value: 'Hue wall switch module'
+
+
+.. py:data:: HUE_WALL_REMOTE
+
+.. py:data:: HUE_TAP_REMOTE_MODEL
+   :value: 'Hue tap switch'
+
+
+.. py:data:: HUE_TAP_REMOTE
+
+.. py:data:: HUE_FOHSWITCH_REMOTE_MODEL
+   :value: 'Friends of Hue Switch'
+
+
+.. py:data:: HUE_FOHSWITCH_REMOTE
+
+.. py:data:: REMOTES
+   :type:  dict[str, dict[tuple[str, str], dict[str, int]]]
+
+.. py:function:: _get_hue_event_from_device_id(hass, device_id)
+
+   Resolve hue event from device id.
+
+
+.. py:function:: async_validate_trigger_config(bridge: homeassistant.components.hue.bridge.HueBridge, device_entry: homeassistant.helpers.device_registry.DeviceEntry, config: homeassistant.helpers.typing.ConfigType) -> homeassistant.helpers.typing.ConfigType
+   :async:
+
+
+   Validate config.
+
+
+.. py:function:: async_attach_trigger(bridge: homeassistant.components.hue.bridge.HueBridge, device_entry: homeassistant.helpers.device_registry.DeviceEntry, config: homeassistant.helpers.typing.ConfigType, action: homeassistant.helpers.trigger.TriggerActionType, trigger_info: homeassistant.helpers.trigger.TriggerInfo) -> homeassistant.core.CALLBACK_TYPE
+   :async:
+
+
+   Listen for state changes based on configuration.
+
+
+.. py:function:: async_get_triggers(bridge: homeassistant.components.hue.bridge.HueBridge, device: homeassistant.helpers.device_registry.DeviceEntry) -> list[dict[str, str]]
+
+   Return device triggers for device on `v1` bridge.
+
+   Make sure device is a supported remote model.
+   Retrieve the hue event object matching device entry.
+   Generate device trigger list.
+
+

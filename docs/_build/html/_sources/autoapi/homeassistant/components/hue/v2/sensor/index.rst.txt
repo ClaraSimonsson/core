@@ -1,0 +1,165 @@
+homeassistant.components.hue.v2.sensor
+======================================
+
+.. py:module:: homeassistant.components.hue.v2.sensor
+
+.. autoapi-nested-parse::
+
+   Support for Hue sensors.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.sensor.SensorType
+   homeassistant.components.hue.v2.sensor.ControllerType
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.sensor.HueSensorBase
+   homeassistant.components.hue.v2.sensor.HueTemperatureSensor
+   homeassistant.components.hue.v2.sensor.HueLightLevelSensor
+   homeassistant.components.hue.v2.sensor.HueBatterySensor
+   homeassistant.components.hue.v2.sensor.HueZigbeeConnectivitySensor
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.sensor.async_setup_entry
+
+
+Module Contents
+---------------
+
+.. py:type:: SensorType
+   :canonical: DevicePower | LightLevel | Temperature | ZigbeeConnectivity
+
+
+.. py:type:: ControllerType
+   :canonical: DevicePowerController | LightLevelController | TemperatureController | ZigbeeConnectivityController
+
+
+.. py:function:: async_setup_entry(hass: homeassistant.core.HomeAssistant, config_entry: homeassistant.components.hue.bridge.HueConfigEntry, async_add_entities: homeassistant.helpers.entity_platform.AddConfigEntryEntitiesCallback) -> None
+   :async:
+
+
+   Set up Hue Sensors from Config Entry.
+
+
+.. py:class:: HueSensorBase(bridge: homeassistant.components.hue.bridge.HueBridge, controller: ControllerType, resource: SensorType)
+
+   Bases: :py:obj:`homeassistant.components.hue.v2.entity.HueBaseEntity`, :py:obj:`homeassistant.components.sensor.SensorEntity`
+
+
+   Representation of a Hue sensor.
+
+
+   .. py:attribute:: resource
+
+
+   .. py:attribute:: controller
+
+
+.. py:class:: HueTemperatureSensor(bridge: homeassistant.components.hue.bridge.HueBridge, controller: ControllerType, resource: SensorType)
+
+   Bases: :py:obj:`HueSensorBase`
+
+
+   Representation of a Hue Temperature sensor.
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: native_value
+      :type: float
+
+
+      Return the value reported by the sensor.
+
+
+.. py:class:: HueLightLevelSensor(bridge: homeassistant.components.hue.bridge.HueBridge, controller: ControllerType, resource: SensorType)
+
+   Bases: :py:obj:`HueSensorBase`
+
+
+   Representation of a Hue LightLevel (illuminance) sensor.
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: native_value
+      :type: int
+
+
+      Return the value reported by the sensor.
+
+
+   .. py:property:: extra_state_attributes
+      :type: dict[str, Any]
+
+
+      Return the optional state attributes.
+
+
+.. py:class:: HueBatterySensor(bridge: homeassistant.components.hue.bridge.HueBridge, controller: ControllerType, resource: SensorType)
+
+   Bases: :py:obj:`HueSensorBase`
+
+
+   Representation of a Hue Battery sensor.
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: native_value
+      :type: int
+
+
+      Return the value reported by the sensor.
+
+
+   .. py:property:: extra_state_attributes
+      :type: dict[str, Any]
+
+
+      Return the optional state attributes.
+
+
+.. py:class:: HueZigbeeConnectivitySensor(bridge: homeassistant.components.hue.bridge.HueBridge, controller: ControllerType, resource: SensorType)
+
+   Bases: :py:obj:`HueSensorBase`
+
+
+   Representation of a Hue ZigbeeConnectivity sensor.
+
+
+   .. py:attribute:: entity_description
+
+
+   .. py:property:: native_value
+      :type: str
+
+
+      Return the value reported by the sensor.
+
+
+   .. py:property:: extra_state_attributes
+      :type: dict[str, Any]
+
+
+      Return the optional state attributes.
+
+

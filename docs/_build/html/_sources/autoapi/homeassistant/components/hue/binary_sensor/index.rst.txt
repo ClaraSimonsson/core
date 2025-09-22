@@ -1,0 +1,29 @@
+homeassistant.components.hue.binary_sensor
+==========================================
+
+.. py:module:: homeassistant.components.hue.binary_sensor
+
+.. autoapi-nested-parse::
+
+   Support for Hue binary sensors.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.binary_sensor.async_setup_entry
+
+
+Module Contents
+---------------
+
+.. py:function:: async_setup_entry(hass: homeassistant.core.HomeAssistant, config_entry: homeassistant.components.hue.bridge.HueConfigEntry, async_add_entities: homeassistant.helpers.entity_platform.AddConfigEntryEntitiesCallback) -> None
+   :async:
+
+
+   Set up binary sensor entities.
+
+

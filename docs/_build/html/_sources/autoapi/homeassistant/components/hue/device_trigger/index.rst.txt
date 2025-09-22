@@ -1,0 +1,45 @@
+homeassistant.components.hue.device_trigger
+===========================================
+
+.. py:module:: homeassistant.components.hue.device_trigger
+
+.. autoapi-nested-parse::
+
+   Provides device automations for Philips Hue events.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.device_trigger.async_validate_trigger_config
+   homeassistant.components.hue.device_trigger.async_attach_trigger
+   homeassistant.components.hue.device_trigger.async_get_triggers
+
+
+Module Contents
+---------------
+
+.. py:function:: async_validate_trigger_config(hass: homeassistant.core.HomeAssistant, config: homeassistant.helpers.typing.ConfigType) -> homeassistant.helpers.typing.ConfigType
+   :async:
+
+
+   Validate config.
+
+
+.. py:function:: async_attach_trigger(hass: homeassistant.core.HomeAssistant, config: homeassistant.helpers.typing.ConfigType, action: homeassistant.helpers.trigger.TriggerActionType, trigger_info: homeassistant.helpers.trigger.TriggerInfo) -> homeassistant.core.CALLBACK_TYPE
+   :async:
+
+
+   Listen for state changes based on configuration.
+
+
+.. py:function:: async_get_triggers(hass: homeassistant.core.HomeAssistant, device_id: str) -> list[dict[str, Any]]
+   :async:
+
+
+   Get device triggers for given (hass) device id.
+
+

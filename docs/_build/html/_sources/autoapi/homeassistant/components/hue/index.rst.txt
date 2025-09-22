@@ -1,0 +1,191 @@
+homeassistant.components.hue
+============================
+
+.. py:module:: homeassistant.components.hue
+
+.. autoapi-nested-parse::
+
+   Support for the Philips Hue system.
+
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/homeassistant/components/hue/binary_sensor/index
+   /autoapi/homeassistant/components/hue/bridge/index
+   /autoapi/homeassistant/components/hue/config_flow/index
+   /autoapi/homeassistant/components/hue/const/index
+   /autoapi/homeassistant/components/hue/device_trigger/index
+   /autoapi/homeassistant/components/hue/diagnostics/index
+   /autoapi/homeassistant/components/hue/errors/index
+   /autoapi/homeassistant/components/hue/event/index
+   /autoapi/homeassistant/components/hue/light/index
+   /autoapi/homeassistant/components/hue/migration/index
+   /autoapi/homeassistant/components/hue/scene/index
+   /autoapi/homeassistant/components/hue/sensor/index
+   /autoapi/homeassistant/components/hue/services/index
+   /autoapi/homeassistant/components/hue/switch/index
+   /autoapi/homeassistant/components/hue/v1/index
+   /autoapi/homeassistant/components/hue/v2/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.HueConfigEntry
+   homeassistant.components.hue.DOMAIN
+   homeassistant.components.hue.CONFIG_SCHEMA
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.HueBridge
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.check_migration
+   homeassistant.components.hue.async_setup_services
+   homeassistant.components.hue.async_setup
+   homeassistant.components.hue.async_setup_entry
+   homeassistant.components.hue.async_unload_entry
+
+
+Package Contents
+----------------
+
+.. py:class:: HueBridge(hass: homeassistant.core.HomeAssistant, config_entry: HueConfigEntry)
+
+   Manages a single Hue bridge.
+
+
+   .. py:attribute:: config_entry
+
+
+   .. py:attribute:: hass
+
+
+   .. py:attribute:: authorized
+      :value: False
+
+
+
+   .. py:attribute:: reset_jobs
+      :type:  list[homeassistant.core.CALLBACK_TYPE]
+      :value: []
+
+
+
+   .. py:attribute:: sensor_manager
+      :type:  homeassistant.components.hue.v1.sensor_base.SensorManager | None
+      :value: None
+
+
+
+   .. py:attribute:: logger
+
+
+   .. py:property:: host
+      :type: str
+
+
+      Return the host of this bridge.
+
+
+   .. py:property:: api_version
+      :type: int
+
+
+      Return api version we're set-up for.
+
+
+   .. py:method:: async_initialize_bridge() -> bool
+      :async:
+
+
+      Initialize Connection with the Hue API.
+
+
+
+   .. py:method:: async_request_call(task: collections.abc.Callable, *args, **kwargs) -> Any
+      :async:
+
+
+      Send request to the Hue bridge.
+
+
+
+   .. py:method:: async_reset() -> bool
+      :async:
+
+
+      Reset this bridge to default state.
+
+      Will cancel any scheduled setup retry and will unload
+      the config entry.
+
+
+
+   .. py:method:: handle_unauthorized_error() -> None
+      :async:
+
+
+      Create a new config flow when the authorization is no longer valid.
+
+
+
+.. py:type:: HueConfigEntry
+   :canonical: ConfigEntry[HueBridge]
+
+
+.. py:data:: DOMAIN
+   :value: 'hue'
+
+
+.. py:function:: check_migration(hass: homeassistant.core.HomeAssistant, entry: homeassistant.components.hue.bridge.HueConfigEntry) -> None
+   :async:
+
+
+   Check if config entry needs any migration actions.
+
+
+.. py:function:: async_setup_services(hass: homeassistant.core.HomeAssistant) -> None
+
+   Register services for Hue integration.
+
+
+.. py:data:: CONFIG_SCHEMA
+
+.. py:function:: async_setup(hass: homeassistant.core.HomeAssistant, config: homeassistant.helpers.typing.ConfigType) -> bool
+   :async:
+
+
+   Set up Hue integration.
+
+
+.. py:function:: async_setup_entry(hass: homeassistant.core.HomeAssistant, entry: bridge.HueConfigEntry) -> bool
+   :async:
+
+
+   Set up a bridge from a config entry.
+
+
+.. py:function:: async_unload_entry(hass: homeassistant.core.HomeAssistant, entry: bridge.HueConfigEntry) -> bool
+   :async:
+
+
+   Unload a config entry.
+
+

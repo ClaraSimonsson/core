@@ -1,0 +1,546 @@
+<!doctype html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      homeassistant.components.hue.v2.group &mdash; homeassistant documentation
+    </title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/pygments.css?v=b86133f3"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/css/theme.css?v=e59714d7"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/graphviz.css?v=4ae1632d"
+    />
+
+    <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  </head>
+
+  <body class="wy-body-for-nav">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../../index.html" class="icon icon-home">
+              homeassistant
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+            </div>
+          </div>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <p class="caption" role="heading">
+              <span class="caption-text">Contents:</span>
+            </p>
+            <ul>
+              <li class="toctree-l1">
+                <a
+                  class="reference internal"
+                  href="../../../../../autoapi/homeassistant/components/hue/index.html"
+                  >homeassistant.components.hue</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">homeassistant</a>
+        </nav>
+
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="Page navigation">
+              <ul class="wy-breadcrumbs">
+                <li>
+                  <a
+                    href="../../../../../index.html"
+                    class="icon icon-home"
+                    aria-label="Home"
+                  ></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../../../index.html">Module code</a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../hue.html">homeassistant.components.hue</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  homeassistant.components.hue.v2.group
+                </li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div itemprop="articleBody">
+                <h1>Source code for homeassistant.components.hue.v2.group</h1>
+                <div class="highlight">
+                  <pre>
+<span></span><span class="sd">&quot;&quot;&quot;Support for Hue groups (room/zone).&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBridgeV2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.controllers.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.controllers.groups</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupedLight</span><span class="p">,</span> <span class="n">Room</span><span class="p">,</span> <span class="n">Zone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.feature</span><span class="w"> </span><span class="kn">import</span> <span class="n">DynamicStatus</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.components.light</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ATTR_BRIGHTNESS</span><span class="p">,</span>
+    <span class="n">ATTR_COLOR_TEMP_KELVIN</span><span class="p">,</span>
+    <span class="n">ATTR_FLASH</span><span class="p">,</span>
+    <span class="n">ATTR_TRANSITION</span><span class="p">,</span>
+    <span class="n">ATTR_XY_COLOR</span><span class="p">,</span>
+    <span class="n">FLASH_SHORT</span><span class="p">,</span>
+    <span class="n">ColorMode</span><span class="p">,</span>
+    <span class="n">LightEntity</span><span class="p">,</span>
+    <span class="n">LightEntityDescription</span><span class="p">,</span>
+    <span class="n">LightEntityFeature</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">HomeAssistant</span><span class="p">,</span> <span class="n">callback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">entity_registry</span> <span class="k">as</span> <span class="n">er</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.device_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceInfo</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.entity_platform</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddConfigEntryEntitiesCallback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">color</span> <span class="k">as</span> <span class="n">color_util</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..bridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBridge</span><span class="p">,</span> <span class="n">HueConfigEntry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..const</span><span class="w"> </span><span class="kn">import</span> <span class="n">DOMAIN</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.entity</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBaseEntity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">normalize_hue_brightness</span><span class="p">,</span>
+    <span class="n">normalize_hue_colortemp</span><span class="p">,</span>
+    <span class="n">normalize_hue_transition</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="async_setup_entry">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/group/index.html#homeassistant.components.hue.v2.group.async_setup_entry">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_setup_entry</span><span class="p">(</span>
+    <span class="n">hass</span><span class="p">:</span> <span class="n">HomeAssistant</span><span class="p">,</span>
+    <span class="n">config_entry</span><span class="p">:</span> <span class="n">HueConfigEntry</span><span class="p">,</span>
+    <span class="n">async_add_entities</span><span class="p">:</span> <span class="n">AddConfigEntryEntitiesCallback</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up Hue groups on light platform.&quot;&quot;&quot;</span>
+    <span class="n">bridge</span> <span class="o">=</span> <span class="n">config_entry</span><span class="o">.</span><span class="n">runtime_data</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">HueBridgeV2</span> <span class="o">=</span> <span class="n">bridge</span><span class="o">.</span><span class="n">api</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_add_light</span><span class="p">(</span><span class="n">event_type</span><span class="p">:</span> <span class="n">EventType</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">GroupedLight</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add Grouped Light for Hue Room/Zone.&quot;&quot;&quot;</span>
+        <span class="c1"># delay group creation a bit due to a race condition where the</span>
+        <span class="c1"># grouped_light resource is created before the zone/room</span>
+        <span class="n">retries</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">while</span> <span class="p">(</span>
+            <span class="n">retries</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">group</span> <span class="o">:=</span> <span class="n">api</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">grouped_light</span><span class="o">.</span><span class="n">get_zone</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">))</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="n">retries</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># guard, just in case</span>
+            <span class="k">return</span>
+        <span class="n">light</span> <span class="o">=</span> <span class="n">GroupedHueLight</span><span class="p">(</span><span class="n">bridge</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+        <span class="n">async_add_entities</span><span class="p">([</span><span class="n">light</span><span class="p">])</span>
+
+    <span class="c1"># add current items</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">api</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">grouped_light</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">async_add_light</span><span class="p">(</span><span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_ADDED</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+
+    <span class="c1"># register listener for new grouped_light</span>
+    <span class="n">config_entry</span><span class="o">.</span><span class="n">async_on_unload</span><span class="p">(</span>
+        <span class="n">api</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">grouped_light</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+            <span class="n">async_add_light</span><span class="p">,</span> <span class="n">event_filter</span><span class="o">=</span><span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_ADDED</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># pylint: disable-next=hass-enforce-class-module</span>
+<div class="viewcode-block" id="GroupedHueLight">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/group/index.html#homeassistant.components.hue.v2.group.GroupedHueLight">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GroupedHueLight</span><span class="p">(</span><span class="n">HueBaseEntity</span><span class="p">,</span> <span class="n">LightEntity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Grouped Hue light.&quot;&quot;&quot;</span>
+
+    <span class="n">entity_description</span> <span class="o">=</span> <span class="n">LightEntityDescription</span><span class="p">(</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;hue_grouped_light&quot;</span><span class="p">,</span>
+        <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;mdi:lightbulb-group&quot;</span><span class="p">,</span>
+        <span class="n">has_entity_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">bridge</span><span class="p">:</span> <span class="n">HueBridge</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">GroupedLight</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Room</span> <span class="o">|</span> <span class="n">Zone</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the light.&quot;&quot;&quot;</span>
+        <span class="n">controller</span> <span class="o">=</span> <span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">grouped_light</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">bridge</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="n">resource</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource</span> <span class="o">=</span> <span class="n">resource</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">group</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="p">:</span> <span class="n">HueBridgeV2</span> <span class="o">=</span> <span class="n">bridge</span><span class="o">.</span><span class="n">api</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr_supported_features</span> <span class="o">|=</span> <span class="n">LightEntityFeature</span><span class="o">.</span><span class="n">FLASH</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr_supported_features</span> <span class="o">|=</span> <span class="n">LightEntityFeature</span><span class="o">.</span><span class="n">TRANSITION</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_restore_brightness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_brightness_pct</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># we create a virtual service/device for Hue zones/rooms</span>
+        <span class="c1"># so we have a parent for grouped lights and scenes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr_device_info</span> <span class="o">=</span> <span class="n">DeviceInfo</span><span class="p">(</span>
+            <span class="n">identifiers</span><span class="o">=</span><span class="p">{(</span><span class="n">DOMAIN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)},</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_mode_active</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_values</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GroupedHueLight.async_added_to_hass">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/group/index.html#homeassistant.components.hue.v2.group.GroupedHueLight.async_added_to_hass">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_added_to_hass</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call when entity is added.&quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">async_added_to_hass</span><span class="p">()</span>
+
+        <span class="c1"># subscribe to group updates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">async_on_remove</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_event</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># We need to watch the underlying lights too</span>
+        <span class="c1"># if we want feedback about color/brightness changes</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr_supported_color_modes</span><span class="p">:</span>
+            <span class="n">light_ids</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">get_lights</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">async_on_remove</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">lights</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_event</span><span class="p">,</span> <span class="n">light_ids</span><span class="p">)</span>
+            <span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return true if light is on.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">on</span><span class="o">.</span><span class="n">on</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extra_state_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the optional state attributes.&quot;&quot;&quot;</span>
+        <span class="n">scenes</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">scenes</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">rid</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">}</span>
+        <span class="n">light_resource_ids</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">get_lights</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">light_names</span><span class="p">,</span> <span class="n">light_entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_names_and_entity_ids_for_resource_ids</span><span class="p">(</span>
+            <span class="n">light_resource_ids</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;is_hue_group&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;hue_scenes&quot;</span><span class="p">:</span> <span class="n">scenes</span><span class="p">,</span>
+            <span class="s2">&quot;hue_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;lights&quot;</span><span class="p">:</span> <span class="n">light_names</span><span class="p">,</span>
+            <span class="s2">&quot;entity_id&quot;</span><span class="p">:</span> <span class="n">light_entities</span><span class="p">,</span>
+            <span class="s2">&quot;dynamics&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_mode_active</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="GroupedHueLight.async_turn_on">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/group/index.html#homeassistant.components.hue.v2.group.GroupedHueLight.async_turn_on">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_turn_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Turn the grouped_light on.&quot;&quot;&quot;</span>
+        <span class="n">transition</span> <span class="o">=</span> <span class="n">normalize_hue_transition</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ATTR_TRANSITION</span><span class="p">))</span>
+        <span class="n">xy_color</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ATTR_XY_COLOR</span><span class="p">)</span>
+        <span class="n">color_temp</span> <span class="o">=</span> <span class="n">normalize_hue_colortemp</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ATTR_COLOR_TEMP_KELVIN</span><span class="p">))</span>
+        <span class="n">brightness</span> <span class="o">=</span> <span class="n">normalize_hue_brightness</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ATTR_BRIGHTNESS</span><span class="p">))</span>
+        <span class="n">flash</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ATTR_FLASH</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_restore_brightness</span> <span class="ow">and</span> <span class="n">brightness</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># The Hue bridge sets the brightness to 1% when turning on a bulb</span>
+            <span class="c1"># when a transition was used to turn off the bulb.</span>
+            <span class="c1"># This issue has been reported on the Hue forum several times:</span>
+            <span class="c1"># https://developers.meethue.com/forum/t/brightness-turns-down-to-1-automatically-shortly-after-sending-off-signal-hue-bug/5692</span>
+            <span class="c1"># https://developers.meethue.com/forum/t/lights-turn-on-with-lowest-brightness-via-siri-if-turned-off-via-api/6700</span>
+            <span class="c1"># https://developers.meethue.com/forum/t/using-transitiontime-with-on-false-resets-bri-to-1/4585</span>
+            <span class="c1"># https://developers.meethue.com/forum/t/bri-value-changing-in-switching-lights-on-off/6323</span>
+            <span class="c1"># https://developers.meethue.com/forum/t/fade-in-fade-out/6673</span>
+            <span class="n">brightness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_restore_brightness</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_restore_brightness</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">flash</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_set_flash</span><span class="p">(</span><span class="n">flash</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">async_request_call</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">set_state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">brightness</span><span class="o">=</span><span class="n">brightness</span><span class="p">,</span>
+            <span class="n">color_xy</span><span class="o">=</span><span class="n">xy_color</span><span class="p">,</span>
+            <span class="n">color_temp</span><span class="o">=</span><span class="n">color_temp</span><span class="p">,</span>
+            <span class="n">transition_time</span><span class="o">=</span><span class="n">transition</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GroupedHueLight.async_turn_off">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/group/index.html#homeassistant.components.hue.v2.group.GroupedHueLight.async_turn_off">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_turn_off</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Turn the light off.&quot;&quot;&quot;</span>
+        <span class="n">transition</span> <span class="o">=</span> <span class="n">normalize_hue_transition</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ATTR_TRANSITION</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">transition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_restore_brightness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_brightness_pct</span>
+        <span class="n">flash</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ATTR_FLASH</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">flash</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_set_flash</span><span class="p">(</span><span class="n">flash</span><span class="p">)</span>
+            <span class="c1"># flash cannot be sent with other commands at the same time</span>
+            <span class="k">return</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">async_request_call</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">set_state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">transition_time</span><span class="o">=</span><span class="n">transition</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GroupedHueLight.async_set_flash">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/group/index.html#homeassistant.components.hue.v2.group.GroupedHueLight.async_set_flash">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_set_flash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send flash command to light.&quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">async_request_call</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">set_flash</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">short</span><span class="o">=</span><span class="n">flash</span> <span class="o">==</span> <span class="n">FLASH_SHORT</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GroupedHueLight.on_update">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/group/index.html#homeassistant.components.hue.v2.group.GroupedHueLight.on_update">[docs]</a>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call on update event.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_values</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="GroupedHueLight._update_values">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/group/index.html#homeassistant.components.hue.v2.group.GroupedHueLight._update_values">[docs]</a>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set base values from underlying lights of a group.&quot;&quot;&quot;</span>
+        <span class="n">supported_color_modes</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">ColorMode</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">lights_with_color_support</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">lights_with_color_temp_support</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">lights_with_dimming_support</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">lights_on_with_dimming_support</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_brightness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">all_lights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">get_lights</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">lights_in_colortemp_mode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">lights_in_xy_mode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">lights_in_dynamic_mode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># accumulate color values</span>
+        <span class="n">xy_total_x</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">xy_total_y</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">xy_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">temp_total</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1"># loop through all lights to find capabilities</span>
+        <span class="k">for</span> <span class="n">light</span> <span class="ow">in</span> <span class="n">all_lights</span><span class="p">:</span>
+            <span class="c1"># reset per-light colortemp on flag</span>
+            <span class="n">light_in_colortemp_mode</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># check if light has color temperature</span>
+            <span class="k">if</span> <span class="n">color_temp</span> <span class="o">:=</span> <span class="n">light</span><span class="o">.</span><span class="n">color_temperature</span><span class="p">:</span>
+                <span class="n">lights_with_color_temp_support</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># default to mired values from the last capable light</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_attr_color_temp_kelvin</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">color_util</span><span class="o">.</span><span class="n">color_temperature_mired_to_kelvin</span><span class="p">(</span><span class="n">color_temp</span><span class="o">.</span><span class="n">mirek</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">color_temp</span><span class="o">.</span><span class="n">mirek</span>
+                    <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_attr_min_color_temp_kelvin</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">color_util</span><span class="o">.</span><span class="n">color_temperature_mired_to_kelvin</span><span class="p">(</span>
+                        <span class="n">color_temp</span><span class="o">.</span><span class="n">mirek_schema</span><span class="o">.</span><span class="n">mirek_maximum</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_attr_max_color_temp_kelvin</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">color_util</span><span class="o">.</span><span class="n">color_temperature_mired_to_kelvin</span><span class="p">(</span>
+                        <span class="n">color_temp</span><span class="o">.</span><span class="n">mirek_schema</span><span class="o">.</span><span class="n">mirek_minimum</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="c1"># counters for color mode vote and average temp</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">light</span><span class="o">.</span><span class="n">on</span><span class="o">.</span><span class="n">on</span>
+                    <span class="ow">and</span> <span class="n">color_temp</span><span class="o">.</span><span class="n">mirek</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="n">color_temp</span><span class="o">.</span><span class="n">mirek_valid</span>
+                <span class="p">):</span>
+                    <span class="n">lights_in_colortemp_mode</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">light_in_colortemp_mode</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">temp_total</span> <span class="o">+=</span> <span class="n">color_util</span><span class="o">.</span><span class="n">color_temperature_mired_to_kelvin</span><span class="p">(</span>
+                        <span class="n">color_temp</span><span class="o">.</span><span class="n">mirek</span>
+                    <span class="p">)</span>
+            <span class="c1"># check if light has color xy</span>
+            <span class="k">if</span> <span class="n">color</span> <span class="o">:=</span> <span class="n">light</span><span class="o">.</span><span class="n">color</span><span class="p">:</span>
+                <span class="n">lights_with_color_support</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># default to xy values from the last capable light</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_attr_xy_color</span> <span class="o">=</span> <span class="p">(</span><span class="n">color</span><span class="o">.</span><span class="n">xy</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">color</span><span class="o">.</span><span class="n">xy</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="c1"># counters for color mode vote and average xy color</span>
+                <span class="k">if</span> <span class="n">light</span><span class="o">.</span><span class="n">on</span><span class="o">.</span><span class="n">on</span><span class="p">:</span>
+                    <span class="n">xy_total_x</span> <span class="o">+=</span> <span class="n">color</span><span class="o">.</span><span class="n">xy</span><span class="o">.</span><span class="n">x</span>
+                    <span class="n">xy_total_y</span> <span class="o">+=</span> <span class="n">color</span><span class="o">.</span><span class="n">xy</span><span class="o">.</span><span class="n">y</span>
+                    <span class="n">xy_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="c1"># only count for colour mode vote if</span>
+                    <span class="c1"># this light is not in colortemp mode</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">light_in_colortemp_mode</span><span class="p">:</span>
+                        <span class="n">lights_in_xy_mode</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># check if light has dimming</span>
+            <span class="k">if</span> <span class="n">dimming</span> <span class="o">:=</span> <span class="n">light</span><span class="o">.</span><span class="n">dimming</span><span class="p">:</span>
+                <span class="n">lights_with_dimming_support</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># accumulate brightness values</span>
+                <span class="k">if</span> <span class="n">light</span><span class="o">.</span><span class="n">on</span><span class="o">.</span><span class="n">on</span><span class="p">:</span>
+                    <span class="n">total_brightness</span> <span class="o">+=</span> <span class="n">dimming</span><span class="o">.</span><span class="n">brightness</span>
+                    <span class="n">lights_on_with_dimming_support</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># check if light is in dynamic mode</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">light</span><span class="o">.</span><span class="n">dynamics</span>
+                <span class="ow">and</span> <span class="n">light</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">DynamicStatus</span><span class="o">.</span><span class="n">DYNAMIC_PALETTE</span>
+            <span class="p">):</span>
+                <span class="n">lights_in_dynamic_mode</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># this is a bit hacky because light groups may contain lights</span>
+        <span class="c1"># of different capabilities</span>
+        <span class="c1"># this means that the state is derived from only some of the lights</span>
+        <span class="c1"># and will never be 100% accurate but it will be close</span>
+
+        <span class="c1"># assign group color support modes based on light capabilities</span>
+        <span class="k">if</span> <span class="n">lights_with_color_support</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">supported_color_modes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ColorMode</span><span class="o">.</span><span class="n">XY</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lights_with_color_temp_support</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">supported_color_modes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ColorMode</span><span class="o">.</span><span class="n">COLOR_TEMP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lights_with_dimming_support</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">supported_color_modes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># only add color mode brightness if no color variants</span>
+                <span class="n">supported_color_modes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ColorMode</span><span class="o">.</span><span class="n">BRIGHTNESS</span><span class="p">)</span>
+            <span class="c1"># as we have brightness support, set group brightness values</span>
+            <span class="k">if</span> <span class="n">lights_on_with_dimming_support</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_brightness_pct</span> <span class="o">=</span> <span class="n">total_brightness</span> <span class="o">/</span> <span class="n">lights_on_with_dimming_support</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_attr_brightness</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+                    <span class="p">((</span><span class="n">total_brightness</span> <span class="o">/</span> <span class="n">lights_on_with_dimming_support</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">supported_color_modes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ColorMode</span><span class="o">.</span><span class="n">ONOFF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_mode_active</span> <span class="o">=</span> <span class="n">lights_in_dynamic_mode</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr_supported_color_modes</span> <span class="o">=</span> <span class="n">supported_color_modes</span>
+        <span class="c1"># set the group color values if there are any color lights on</span>
+        <span class="k">if</span> <span class="n">xy_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_xy_color</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">round</span><span class="p">(</span><span class="n">xy_total_x</span> <span class="o">/</span> <span class="n">xy_count</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+                <span class="nb">round</span><span class="p">(</span><span class="n">xy_total_y</span> <span class="o">/</span> <span class="n">xy_count</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">lights_in_colortemp_mode</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">avg_temp</span> <span class="o">=</span> <span class="n">temp_total</span> <span class="o">/</span> <span class="n">lights_in_colortemp_mode</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_color_temp_kelvin</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">avg_temp</span><span class="p">)</span>
+        <span class="c1"># pick a winner for the current color mode based on the majority of on lights</span>
+        <span class="c1"># if there is no winner pick the highest mode from group capabilities</span>
+        <span class="k">if</span> <span class="n">lights_in_xy_mode</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">lights_in_xy_mode</span> <span class="o">&gt;=</span> <span class="n">lights_in_colortemp_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_color_mode</span> <span class="o">=</span> <span class="n">ColorMode</span><span class="o">.</span><span class="n">XY</span>
+        <span class="k">elif</span> <span class="p">(</span>
+            <span class="n">lights_in_colortemp_mode</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">and</span> <span class="n">lights_in_colortemp_mode</span> <span class="o">&gt;</span> <span class="n">lights_in_xy_mode</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_color_mode</span> <span class="o">=</span> <span class="n">ColorMode</span><span class="o">.</span><span class="n">COLOR_TEMP</span>
+        <span class="k">elif</span> <span class="n">lights_with_color_support</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_color_mode</span> <span class="o">=</span> <span class="n">ColorMode</span><span class="o">.</span><span class="n">XY</span>
+        <span class="k">elif</span> <span class="n">lights_with_color_temp_support</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_color_mode</span> <span class="o">=</span> <span class="n">ColorMode</span><span class="o">.</span><span class="n">COLOR_TEMP</span>
+        <span class="k">elif</span> <span class="n">lights_with_dimming_support</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_color_mode</span> <span class="o">=</span> <span class="n">ColorMode</span><span class="o">.</span><span class="n">BRIGHTNESS</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_color_mode</span> <span class="o">=</span> <span class="n">ColorMode</span><span class="o">.</span><span class="n">ONOFF</span></div>
+
+
+<div class="viewcode-block" id="GroupedHueLight._get_names_and_entity_ids_for_resource_ids">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v2/group/index.html#homeassistant.components.hue.v2.group.GroupedHueLight._get_names_and_entity_ids_for_resource_ids">[docs]</a>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_names_and_entity_ids_for_resource_ids</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">resource_ids</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the names and entity ids for the given Hue (light) resource IDs.&quot;&quot;&quot;</span>
+        <span class="n">ent_reg</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">async_get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hass</span><span class="p">)</span>
+        <span class="n">light_names</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">light_entities</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">resource_id</span> <span class="ow">in</span> <span class="n">resource_ids</span><span class="p">:</span>
+            <span class="n">light_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">resource_id</span><span class="p">)</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">entity_id</span> <span class="o">:=</span> <span class="n">ent_reg</span><span class="o">.</span><span class="n">async_get_entity_id</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">DOMAIN</span><span class="p">,</span> <span class="n">resource_id</span>
+            <span class="p">):</span>
+                <span class="n">light_entities</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entity_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">light_names</span><span class="p">,</span> <span class="n">light_entities</span></div>
+</div>
+
+</pre>
+                </div>
+              </div>
+            </div>
+            <footer>
+              <hr />
+
+              <div role="contentinfo">
+                <p>&#169; Copyright 2025, Clara Simonsson.</p>
+              </div>
+
+              Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using
+              a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme"
+                >theme</a
+              >
+              provided by <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
+    </script>
+  </body>
+</html>

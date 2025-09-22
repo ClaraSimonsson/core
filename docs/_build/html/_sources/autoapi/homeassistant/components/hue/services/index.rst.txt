@@ -1,0 +1,53 @@
+homeassistant.components.hue.services
+=====================================
+
+.. py:module:: homeassistant.components.hue.services
+
+.. autoapi-nested-parse::
+
+   Handle Hue Service calls.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.services.LOGGER
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.services.async_setup_services
+   homeassistant.components.hue.services.hue_activate_scene_v1
+   homeassistant.components.hue.services.hue_activate_scene_v2
+
+
+Module Contents
+---------------
+
+.. py:data:: LOGGER
+
+.. py:function:: async_setup_services(hass: homeassistant.core.HomeAssistant) -> None
+
+   Register services for Hue integration.
+
+
+.. py:function:: hue_activate_scene_v1(bridge: homeassistant.components.hue.bridge.HueBridge, group_name: str, scene_name: str, transition: int | None = None, is_retry: bool = False) -> bool
+   :async:
+
+
+   Service for V1 bridge to call directly into bridge to set scenes.
+
+
+.. py:function:: hue_activate_scene_v2(bridge: homeassistant.components.hue.bridge.HueBridge, group_name: str, scene_name: str, transition: int | None = None, dynamic: bool = True) -> bool
+   :async:
+
+
+   Service for V2 bridge to call scene by name.
+
+

@@ -1,0 +1,303 @@
+<!doctype html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      homeassistant.components.hue.event &mdash; homeassistant documentation
+    </title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../_static/pygments.css?v=b86133f3"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../_static/css/theme.css?v=e59714d7"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../_static/graphviz.css?v=4ae1632d"
+    />
+
+    <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  </head>
+
+  <body class="wy-body-for-nav">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../index.html" class="icon icon-home">
+              homeassistant
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+            </div>
+          </div>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <p class="caption" role="heading">
+              <span class="caption-text">Contents:</span>
+            </p>
+            <ul>
+              <li class="toctree-l1">
+                <a
+                  class="reference internal"
+                  href="../../../../autoapi/homeassistant/components/hue/index.html"
+                  >homeassistant.components.hue</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">homeassistant</a>
+        </nav>
+
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="Page navigation">
+              <ul class="wy-breadcrumbs">
+                <li>
+                  <a
+                    href="../../../../index.html"
+                    class="icon icon-home"
+                    aria-label="Home"
+                  ></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../../index.html">Module code</a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../hue.html">homeassistant.components.hue</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  homeassistant.components.hue.event
+                </li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div itemprop="articleBody">
+                <h1>Source code for homeassistant.components.hue.event</h1>
+                <div class="highlight">
+                  <pre>
+<span></span><span class="sd">&quot;&quot;&quot;Hue event entities from Button resources.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBridgeV2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.controllers.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.button</span><span class="w"> </span><span class="kn">import</span> <span class="n">Button</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v2.models.relative_rotary</span><span class="w"> </span><span class="kn">import</span> <span class="n">RelativeRotary</span><span class="p">,</span> <span class="n">RelativeRotaryDirection</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.components.event</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">EventDeviceClass</span><span class="p">,</span>
+    <span class="n">EventEntity</span><span class="p">,</span>
+    <span class="n">EventEntityDescription</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">HomeAssistant</span><span class="p">,</span> <span class="n">callback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.entity_platform</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddConfigEntryEntitiesCallback</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.bridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueConfigEntry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.const</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_BUTTON_EVENT_TYPES</span><span class="p">,</span> <span class="n">DEVICE_SPECIFIC_EVENT_TYPES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.v2.entity</span><span class="w"> </span><span class="kn">import</span> <span class="n">HueBaseEntity</span>
+
+
+<div class="viewcode-block" id="async_setup_entry">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/event/index.html#homeassistant.components.hue.event.async_setup_entry">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_setup_entry</span><span class="p">(</span>
+    <span class="n">hass</span><span class="p">:</span> <span class="n">HomeAssistant</span><span class="p">,</span>
+    <span class="n">config_entry</span><span class="p">:</span> <span class="n">HueConfigEntry</span><span class="p">,</span>
+    <span class="n">async_add_entities</span><span class="p">:</span> <span class="n">AddConfigEntryEntitiesCallback</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up event platform from Hue button resources.&quot;&quot;&quot;</span>
+    <span class="n">bridge</span> <span class="o">=</span> <span class="n">config_entry</span><span class="o">.</span><span class="n">runtime_data</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">HueBridgeV2</span> <span class="o">=</span> <span class="n">bridge</span><span class="o">.</span><span class="n">api</span>
+
+    <span class="k">if</span> <span class="n">bridge</span><span class="o">.</span><span class="n">api_version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># should not happen, but just in case</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Event support is only available for V2 bridges&quot;</span><span class="p">)</span>
+
+    <span class="c1"># add entities for all button and relative rotary resources</span>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">async_add_entity</span><span class="p">(</span>
+        <span class="n">event_type</span><span class="p">:</span> <span class="n">EventType</span><span class="p">,</span>
+        <span class="n">resource</span><span class="p">:</span> <span class="n">Button</span> <span class="o">|</span> <span class="n">RelativeRotary</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add entity from Hue resource.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">RelativeRotary</span><span class="p">):</span>
+            <span class="n">async_add_entities</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">HueRotaryEventEntity</span><span class="p">(</span><span class="n">bridge</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">relative_rotary</span><span class="p">,</span> <span class="n">resource</span><span class="p">)]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">async_add_entities</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">HueButtonEventEntity</span><span class="p">(</span><span class="n">bridge</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">button</span><span class="p">,</span> <span class="n">resource</span><span class="p">)]</span>
+            <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">controller</span> <span class="ow">in</span> <span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">button</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">relative_rotary</span><span class="p">):</span>
+        <span class="c1"># add all current items in controller</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">controller</span><span class="p">:</span>
+            <span class="n">async_add_entity</span><span class="p">(</span><span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_ADDED</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+
+        <span class="c1"># register listener for new items only</span>
+        <span class="n">config_entry</span><span class="o">.</span><span class="n">async_on_unload</span><span class="p">(</span>
+            <span class="n">controller</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+                <span class="n">async_add_entity</span><span class="p">,</span> <span class="n">event_filter</span><span class="o">=</span><span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_ADDED</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="HueButtonEventEntity">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/event/index.html#homeassistant.components.hue.event.HueButtonEventEntity">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HueButtonEventEntity</span><span class="p">(</span><span class="n">HueBaseEntity</span><span class="p">,</span> <span class="n">EventEntity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Hue Event entity from a button resource.&quot;&quot;&quot;</span>
+
+    <span class="n">entity_description</span> <span class="o">=</span> <span class="n">EventEntityDescription</span><span class="p">(</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;button&quot;</span><span class="p">,</span>
+        <span class="n">device_class</span><span class="o">=</span><span class="n">EventDeviceClass</span><span class="o">.</span><span class="n">BUTTON</span><span class="p">,</span>
+        <span class="n">translation_key</span><span class="o">=</span><span class="s2">&quot;button&quot;</span><span class="p">,</span>
+        <span class="n">has_entity_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the entity.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># fill the event types based on the features the switch supports</span>
+        <span class="n">hue_dev_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">model_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="n">hue_dev_id</span><span class="p">]</span><span class="o">.</span><span class="n">product_data</span><span class="o">.</span><span class="n">product_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr_event_types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">event_type</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">for</span> <span class="n">event_type</span> <span class="ow">in</span> <span class="n">DEVICE_SPECIFIC_EVENT_TYPES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">model_id</span><span class="p">,</span> <span class="n">DEFAULT_BUTTON_EVENT_TYPES</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr_translation_placeholders</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;button_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">control_id</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="HueButtonEventEntity._handle_event">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/event/index.html#homeassistant.components.hue.event.HueButtonEventEntity._handle_event">[docs]</a>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="n">EventType</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">Button</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle status event for this resource (or it&#39;s parent).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event_type</span> <span class="o">==</span> <span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_UPDATED</span> <span class="ow">and</span> <span class="n">resource</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">button</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">resource</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">button_report</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_trigger_event</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">button_report</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">async_write_ha_state</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_handle_event</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="n">resource</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="HueRotaryEventEntity">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/event/index.html#homeassistant.components.hue.event.HueRotaryEventEntity">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HueRotaryEventEntity</span><span class="p">(</span><span class="n">HueBaseEntity</span><span class="p">,</span> <span class="n">EventEntity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Hue Event entity from a RelativeRotary resource.&quot;&quot;&quot;</span>
+
+    <span class="n">entity_description</span> <span class="o">=</span> <span class="n">EventEntityDescription</span><span class="p">(</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;rotary&quot;</span><span class="p">,</span>
+        <span class="n">device_class</span><span class="o">=</span><span class="n">EventDeviceClass</span><span class="o">.</span><span class="n">BUTTON</span><span class="p">,</span>
+        <span class="n">translation_key</span><span class="o">=</span><span class="s2">&quot;rotary&quot;</span><span class="p">,</span>
+        <span class="n">event_types</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">RelativeRotaryDirection</span><span class="o">.</span><span class="n">CLOCK_WISE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">RelativeRotaryDirection</span><span class="o">.</span><span class="n">COUNTER_CLOCK_WISE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">has_entity_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="HueRotaryEventEntity._handle_event">
+<a class="viewcode-back" href="../../../../autoapi/homeassistant/components/hue/event/index.html#homeassistant.components.hue.event.HueRotaryEventEntity._handle_event">[docs]</a>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="n">EventType</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">RelativeRotary</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle status event for this resource (or it&#39;s parent).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event_type</span> <span class="o">==</span> <span class="n">EventType</span><span class="o">.</span><span class="n">RESOURCE_UPDATED</span> <span class="ow">and</span> <span class="n">resource</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">resource</span><span class="o">.</span><span class="n">relative_rotary</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="n">resource</span><span class="o">.</span><span class="n">relative_rotary</span><span class="o">.</span><span class="n">rotary_report</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="p">):</span>
+                <span class="k">return</span>
+            <span class="n">event_key</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">relative_rotary</span><span class="o">.</span><span class="n">rotary_report</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">event_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="n">resource</span><span class="o">.</span><span class="n">relative_rotary</span><span class="o">.</span><span class="n">rotary_report</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span>
+                <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="n">resource</span><span class="o">.</span><span class="n">relative_rotary</span><span class="o">.</span><span class="n">rotary_report</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">resource</span><span class="o">.</span><span class="n">relative_rotary</span><span class="o">.</span><span class="n">rotary_report</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_trigger_event</span><span class="p">(</span><span class="n">event_key</span><span class="p">,</span> <span class="n">event_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">async_write_ha_state</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_handle_event</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="n">resource</span><span class="p">)</span></div>
+</div>
+
+</pre>
+                </div>
+              </div>
+            </div>
+            <footer>
+              <hr />
+
+              <div role="contentinfo">
+                <p>&#169; Copyright 2025, Clara Simonsson.</p>
+              </div>
+
+              Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using
+              a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme"
+                >theme</a
+              >
+              provided by <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
+    </script>
+  </body>
+</html>

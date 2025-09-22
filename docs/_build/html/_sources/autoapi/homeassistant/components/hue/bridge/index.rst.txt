@@ -1,0 +1,146 @@
+homeassistant.components.hue.bridge
+===================================
+
+.. py:module:: homeassistant.components.hue.bridge
+
+.. autoapi-nested-parse::
+
+   Code to handle a Hue bridge.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.bridge.HUB_BUSY_SLEEP
+   homeassistant.components.hue.bridge.PLATFORMS_v1
+   homeassistant.components.hue.bridge.PLATFORMS_v2
+   homeassistant.components.hue.bridge.HueConfigEntry
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.bridge.HueBridge
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.bridge._update_listener
+   homeassistant.components.hue.bridge.create_config_flow
+
+
+Module Contents
+---------------
+
+.. py:data:: HUB_BUSY_SLEEP
+   :value: 0.5
+
+
+.. py:data:: PLATFORMS_v1
+
+.. py:data:: PLATFORMS_v2
+
+.. py:type:: HueConfigEntry
+   :canonical: ConfigEntry[HueBridge]
+
+
+.. py:class:: HueBridge(hass: homeassistant.core.HomeAssistant, config_entry: HueConfigEntry)
+
+   Manages a single Hue bridge.
+
+
+   .. py:attribute:: config_entry
+
+
+   .. py:attribute:: hass
+
+
+   .. py:attribute:: authorized
+      :value: False
+
+
+
+   .. py:attribute:: reset_jobs
+      :type:  list[homeassistant.core.CALLBACK_TYPE]
+      :value: []
+
+
+
+   .. py:attribute:: sensor_manager
+      :type:  homeassistant.components.hue.v1.sensor_base.SensorManager | None
+      :value: None
+
+
+
+   .. py:attribute:: logger
+
+
+   .. py:property:: host
+      :type: str
+
+
+      Return the host of this bridge.
+
+
+   .. py:property:: api_version
+      :type: int
+
+
+      Return api version we're set-up for.
+
+
+   .. py:method:: async_initialize_bridge() -> bool
+      :async:
+
+
+      Initialize Connection with the Hue API.
+
+
+
+   .. py:method:: async_request_call(task: collections.abc.Callable, *args, **kwargs) -> Any
+      :async:
+
+
+      Send request to the Hue bridge.
+
+
+
+   .. py:method:: async_reset() -> bool
+      :async:
+
+
+      Reset this bridge to default state.
+
+      Will cancel any scheduled setup retry and will unload
+      the config entry.
+
+
+
+   .. py:method:: handle_unauthorized_error() -> None
+      :async:
+
+
+      Create a new config flow when the authorization is no longer valid.
+
+
+
+.. py:function:: _update_listener(hass: homeassistant.core.HomeAssistant, entry: HueConfigEntry) -> None
+   :async:
+
+
+   Handle ConfigEntry options update.
+
+
+.. py:function:: create_config_flow(hass: homeassistant.core.HomeAssistant, host: str) -> None
+
+   Start a config flow.
+
+

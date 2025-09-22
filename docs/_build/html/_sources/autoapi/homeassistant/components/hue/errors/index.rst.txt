@@ -1,0 +1,48 @@
+homeassistant.components.hue.errors
+===================================
+
+.. py:module:: homeassistant.components.hue.errors
+
+.. autoapi-nested-parse::
+
+   Errors for the Hue component.
+
+
+
+Exceptions
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.errors.HueException
+   homeassistant.components.hue.errors.CannotConnect
+   homeassistant.components.hue.errors.AuthenticationRequired
+
+
+Module Contents
+---------------
+
+.. py:exception:: HueException(*args: object, translation_domain: str | None = None, translation_key: str | None = None, translation_placeholders: dict[str, str] | None = None)
+
+   Bases: :py:obj:`homeassistant.exceptions.HomeAssistantError`
+
+
+   Base class for Hue exceptions.
+
+
+.. py:exception:: CannotConnect(*args: object, translation_domain: str | None = None, translation_key: str | None = None, translation_placeholders: dict[str, str] | None = None)
+
+   Bases: :py:obj:`HueException`
+
+
+   Unable to connect to the bridge.
+
+
+.. py:exception:: AuthenticationRequired(*args: object, translation_domain: str | None = None, translation_key: str | None = None, translation_placeholders: dict[str, str] | None = None)
+
+   Bases: :py:obj:`HueException`
+
+
+   Unknown error occurred.
+
+

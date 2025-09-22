@@ -1,0 +1,392 @@
+<!doctype html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      homeassistant.components.hue.v1.sensor_base &mdash; homeassistant
+      documentation
+    </title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/pygments.css?v=b86133f3"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/css/theme.css?v=e59714d7"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../_static/graphviz.css?v=4ae1632d"
+    />
+
+    <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  </head>
+
+  <body class="wy-body-for-nav">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../../index.html" class="icon icon-home">
+              homeassistant
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+            </div>
+          </div>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <p class="caption" role="heading">
+              <span class="caption-text">Contents:</span>
+            </p>
+            <ul>
+              <li class="toctree-l1">
+                <a
+                  class="reference internal"
+                  href="../../../../../autoapi/homeassistant/components/hue/index.html"
+                  >homeassistant.components.hue</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">homeassistant</a>
+        </nav>
+
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="Page navigation">
+              <ul class="wy-breadcrumbs">
+                <li>
+                  <a
+                    href="../../../../../index.html"
+                    class="icon icon-home"
+                    aria-label="Home"
+                  ></a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../../../index.html">Module code</a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="../../hue.html">homeassistant.components.hue</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  homeassistant.components.hue.v1.sensor_base
+                </li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div itemprop="articleBody">
+                <h1>
+                  Source code for homeassistant.components.hue.v1.sensor_base
+                </h1>
+                <div class="highlight">
+                  <pre>
+<span></span><span class="sd">&quot;&quot;&quot;Support for the Philips Hue sensors as a platform.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue</span><span class="w"> </span><span class="kn">import</span> <span class="n">AiohueException</span><span class="p">,</span> <span class="n">Unauthorized</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiohue.v1.sensors</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_ZLL_PRESENCE</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.components.sensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">SensorStateClass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">callback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">debounce</span><span class="p">,</span> <span class="n">entity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">homeassistant.helpers.update_coordinator</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataUpdateCoordinator</span><span class="p">,</span> <span class="n">UpdateFailed</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..const</span><span class="w"> </span><span class="kn">import</span> <span class="n">REQUEST_REFRESH_DELAY</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">remove_devices</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.hue_event</span><span class="w"> </span><span class="kn">import</span> <span class="n">EVENT_CONFIG_MAP</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sensor_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericHueDevice</span>
+
+<span class="n">SENSOR_CONFIG_MAP</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="_device_id">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v1/sensor_base/index.html#homeassistant.components.hue.v1.sensor_base._device_id">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_device_id</span><span class="p">(</span><span class="n">aiohue_sensor</span><span class="p">):</span>
+    <span class="c1"># Work out the shared device ID, as described below</span>
+    <span class="n">device_id</span> <span class="o">=</span> <span class="n">aiohue_sensor</span><span class="o">.</span><span class="n">uniqueid</span>
+    <span class="k">if</span> <span class="n">device_id</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">device_id</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">23</span><span class="p">:</span>
+        <span class="n">device_id</span> <span class="o">=</span> <span class="n">device_id</span><span class="p">[:</span><span class="mi">23</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">device_id</span></div>
+
+
+
+<div class="viewcode-block" id="SensorManager">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v1/sensor_base/index.html#homeassistant.components.hue.v1.sensor_base.SensorManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SensorManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that handles registering and updating Hue sensor entities.</span>
+
+<span class="sd">    Intended to be a singleton.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SCAN_INTERVAL</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bridge</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the sensor manager.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span> <span class="o">=</span> <span class="n">bridge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_component_add_entities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_events</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enabled_platforms</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;binary_sensor&quot;</span><span class="p">,</span> <span class="s2">&quot;sensor&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span> <span class="o">=</span> <span class="n">DataUpdateCoordinator</span><span class="p">(</span>
+            <span class="n">bridge</span><span class="o">.</span><span class="n">hass</span><span class="p">,</span>
+            <span class="n">LOGGER</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;sensor&quot;</span><span class="p">,</span>
+            <span class="n">update_method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">async_update_data</span><span class="p">,</span>
+            <span class="n">config_entry</span><span class="o">=</span><span class="n">bridge</span><span class="o">.</span><span class="n">config_entry</span><span class="p">,</span>
+            <span class="n">update_interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">SCAN_INTERVAL</span><span class="p">,</span>
+            <span class="n">request_refresh_debouncer</span><span class="o">=</span><span class="n">debounce</span><span class="o">.</span><span class="n">Debouncer</span><span class="p">(</span>
+                <span class="n">bridge</span><span class="o">.</span><span class="n">hass</span><span class="p">,</span> <span class="n">LOGGER</span><span class="p">,</span> <span class="n">cooldown</span><span class="o">=</span><span class="n">REQUEST_REFRESH_DELAY</span><span class="p">,</span> <span class="n">immediate</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SensorManager.async_update_data">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v1/sensor_base/index.html#homeassistant.components.hue.v1.sensor_base.SensorManager.async_update_data">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_update_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update sensor data.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">async_request_call</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">update</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="n">Unauthorized</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">handle_unauthorized_error</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">UpdateFailed</span><span class="p">(</span><span class="s2">&quot;Unauthorized&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+        <span class="k">except</span> <span class="n">AiohueException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UpdateFailed</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hue error: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SensorManager.async_register_component">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v1/sensor_base/index.html#homeassistant.components.hue.v1.sensor_base.SensorManager.async_register_component">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_register_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">platform</span><span class="p">,</span> <span class="n">async_add_entities</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register async_add_entities methods for components.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_component_add_entities</span><span class="p">[</span><span class="n">platform</span><span class="p">]</span> <span class="o">=</span> <span class="n">async_add_entities</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_add_entities</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_enabled_platforms</span><span class="p">):</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Aborting start with </span><span class="si">%s</span><span class="s2">, waiting for the rest&quot;</span><span class="p">,</span> <span class="n">platform</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># We have all components available, start the updating.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">reset_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">async_add_listener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">async_update_items</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">async_refresh</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SensorManager.async_update_items">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v1/sensor_base/index.html#homeassistant.components.hue.v1.sensor_base.SensorManager.async_update_items">[docs]</a>
+    <span class="nd">@callback</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">async_update_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update sensors from the bridge.&quot;&quot;&quot;</span>
+        <span class="n">api</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">sensors</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_add_entities</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_enabled_platforms</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="n">to_add</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">primary_sensor_devices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span>
+
+        <span class="c1"># Physical Hue motion sensors present as three sensors in the API: a</span>
+        <span class="c1"># presence sensor, a temperature sensor, and a light level sensor. Of</span>
+        <span class="c1"># these, only the presence sensor is assigned the user-friendly name</span>
+        <span class="c1"># that the user has given to the device. Each of these sensors is</span>
+        <span class="c1"># linked by a common device_id, which is the first twenty-three</span>
+        <span class="c1"># characters of the unique id (then followed by a hyphen and an ID</span>
+        <span class="c1"># specific to the individual sensor).</span>
+        <span class="c1">#</span>
+        <span class="c1"># To set up neat values, and assign the sensor entities to the same</span>
+        <span class="c1"># device, we first, iterate over all the sensors and find the Hue</span>
+        <span class="c1"># presence sensors, then iterate over all the remaining sensors -</span>
+        <span class="c1"># finding the remaining ones that may or may not be related to the</span>
+        <span class="c1"># presence sensors.</span>
+        <span class="k">for</span> <span class="n">item_id</span> <span class="ow">in</span> <span class="n">api</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">TYPE_ZLL_PRESENCE</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">primary_sensor_devices</span><span class="p">[</span><span class="n">_device_id</span><span class="p">(</span><span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">])]</span> <span class="o">=</span> <span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">]</span>
+
+        <span class="c1"># Iterate again now we have all the presence sensors, and add the</span>
+        <span class="c1"># related sensors with nice names where appropriate.</span>
+        <span class="k">for</span> <span class="n">item_id</span> <span class="ow">in</span> <span class="n">api</span><span class="p">:</span>
+            <span class="n">uniqueid</span> <span class="o">=</span> <span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">]</span><span class="o">.</span><span class="n">uniqueid</span>
+            <span class="k">if</span> <span class="n">current</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uniqueid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_events</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uniqueid</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">sensor_type</span> <span class="o">=</span> <span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">]</span><span class="o">.</span><span class="n">type</span>
+
+            <span class="c1"># Check for event generator devices</span>
+            <span class="n">event_config</span> <span class="o">=</span> <span class="n">EVENT_CONFIG_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sensor_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">event_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">base_name</span> <span class="o">=</span> <span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">event_config</span><span class="p">[</span><span class="s2">&quot;name_format&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base_name</span><span class="p">)</span>
+                <span class="n">new_event</span> <span class="o">=</span> <span class="n">event_config</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">](</span><span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">hass</span><span class="o">.</span><span class="n">async_create_task</span><span class="p">(</span>
+                    <span class="n">new_event</span><span class="o">.</span><span class="n">async_update_device_registry</span><span class="p">()</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_events</span><span class="p">[</span><span class="n">uniqueid</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_event</span>
+
+            <span class="n">sensor_config</span> <span class="o">=</span> <span class="n">SENSOR_CONFIG_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sensor_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sensor_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">base_name</span> <span class="o">=</span> <span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">primary_sensor</span> <span class="o">=</span> <span class="n">primary_sensor_devices</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_device_id</span><span class="p">(</span><span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">primary_sensor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">base_name</span> <span class="o">=</span> <span class="n">primary_sensor</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">sensor_config</span><span class="p">[</span><span class="s2">&quot;name_format&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base_name</span><span class="p">)</span>
+
+            <span class="n">current</span><span class="p">[</span><span class="n">uniqueid</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_config</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">](</span>
+                <span class="n">api</span><span class="p">[</span><span class="n">item_id</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="p">,</span> <span class="n">primary_sensor</span><span class="o">=</span><span class="n">primary_sensor</span>
+            <span class="p">)</span>
+
+            <span class="n">to_add</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">sensor_config</span><span class="p">[</span><span class="s2">&quot;platform&quot;</span><span class="p">],</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">[</span><span class="n">uniqueid</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">hass</span><span class="o">.</span><span class="n">async_create_task</span><span class="p">(</span>
+            <span class="n">remove_devices</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="p">,</span>
+                <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">uniqueid</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">api</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span>
+                <span class="n">current</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">platform</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">to_add</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_component_add_entities</span><span class="p">[</span><span class="n">platform</span><span class="p">](</span><span class="n">value</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="GenericHueSensor">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v1/sensor_base/index.html#homeassistant.components.hue.v1.sensor_base.GenericHueSensor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenericHueSensor</span><span class="p">(</span><span class="n">GenericHueDevice</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">Entity</span><span class="p">):</span>  <span class="c1"># pylint: disable=hass-enforce-class-module</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Hue sensor.&quot;&quot;&quot;</span>
+
+    <span class="n">should_poll</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">available</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return if sensor is available.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">sensor_manager</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">last_update_success</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">allow_unreachable</span>
+            <span class="c1"># remotes like Hue Tap (ZGPSwitchSensor) have no _reachability_</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reachable&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the state class of this entity, from STATE_CLASSES, if any.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SensorStateClass</span><span class="o">.</span><span class="n">MEASUREMENT</span>
+
+<div class="viewcode-block" id="GenericHueSensor.async_added_to_hass">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v1/sensor_base/index.html#homeassistant.components.hue.v1.sensor_base.GenericHueSensor.async_added_to_hass">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_added_to_hass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;When entity is added to hass.&quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">async_added_to_hass</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">async_on_remove</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">sensor_manager</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">async_add_listener</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">async_write_ha_state</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericHueSensor.async_update">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v1/sensor_base/index.html#homeassistant.components.hue.v1.sensor_base.GenericHueSensor.async_update">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the entity.</span>
+
+<span class="sd">        Only used by the generic entity update service.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">sensor_manager</span><span class="o">.</span><span class="n">coordinator</span><span class="o">.</span><span class="n">async_request_refresh</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="GenericZLLSensor">
+<a class="viewcode-back" href="../../../../../autoapi/homeassistant/components/hue/v1/sensor_base/index.html#homeassistant.components.hue.v1.sensor_base.GenericZLLSensor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenericZLLSensor</span><span class="p">(</span><span class="n">GenericHueSensor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a Hue-brand, physical sensor.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extra_state_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the device state attributes.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;battery_level&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="o">.</span><span class="n">battery</span><span class="p">}</span></div>
+
+</pre>
+                </div>
+              </div>
+            </div>
+            <footer>
+              <hr />
+
+              <div role="contentinfo">
+                <p>&#169; Copyright 2025, Clara Simonsson.</p>
+              </div>
+
+              Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using
+              a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme"
+                >theme</a
+              >
+              provided by <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
+    </script>
+  </body>
+</html>

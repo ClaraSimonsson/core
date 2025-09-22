@@ -1,0 +1,59 @@
+homeassistant.components.hue.v2.device_trigger
+==============================================
+
+.. py:module:: homeassistant.components.hue.v2.device_trigger
+
+.. autoapi-nested-parse::
+
+   Provides device automations for Philips Hue events.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.device_trigger.TRIGGER_SCHEMA
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   homeassistant.components.hue.v2.device_trigger.async_validate_trigger_config
+   homeassistant.components.hue.v2.device_trigger.async_attach_trigger
+   homeassistant.components.hue.v2.device_trigger.async_get_triggers
+   homeassistant.components.hue.v2.device_trigger.get_hue_device_id
+
+
+Module Contents
+---------------
+
+.. py:data:: TRIGGER_SCHEMA
+
+.. py:function:: async_validate_trigger_config(bridge: homeassistant.components.hue.bridge.HueBridge, device_entry: homeassistant.helpers.device_registry.DeviceEntry, config: homeassistant.helpers.typing.ConfigType) -> homeassistant.helpers.typing.ConfigType
+   :async:
+
+
+   Validate config.
+
+
+.. py:function:: async_attach_trigger(bridge: homeassistant.components.hue.bridge.HueBridge, device_entry: homeassistant.helpers.device_registry.DeviceEntry, config: homeassistant.helpers.typing.ConfigType, action: homeassistant.helpers.trigger.TriggerActionType, trigger_info: homeassistant.helpers.trigger.TriggerInfo) -> homeassistant.core.CALLBACK_TYPE
+   :async:
+
+
+   Listen for state changes based on configuration.
+
+
+.. py:function:: async_get_triggers(bridge: homeassistant.components.hue.bridge.HueBridge, device_entry: homeassistant.helpers.device_registry.DeviceEntry) -> list[dict[str, Any]]
+
+   Return device triggers for device on `v2` bridge.
+
+
+.. py:function:: get_hue_device_id(device_entry: homeassistant.helpers.device_registry.DeviceEntry) -> str | None
+
+   Get Hue device id from device entry.
+
+
