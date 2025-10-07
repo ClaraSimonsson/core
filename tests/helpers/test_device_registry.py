@@ -1621,7 +1621,6 @@ async def test_migration_from_1_11(
                     "connections": [["mac", "123456ABCDAB"]],
                     "created_at": "1970-01-01T00:00:00+00:00",
                     "disabled_by": None,
-                    "disabled_by_undefined": False,
                     "id": "abcdefghijklm2",
                     "identifiers": [["serial", "123456ABCDAB"]],
                     "labels": [],
@@ -5284,7 +5283,7 @@ async def test_async_get_or_create_thread_safety(
 
     with pytest.raises(
         RuntimeError,
-        match="Detected code that calls device_registry.async_update_device from a thread.",
+        match="Detected code that calls device_registry._async_update_device from a thread.",
     ):
         await hass.async_add_executor_job(
             partial(
