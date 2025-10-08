@@ -1,0 +1,117 @@
+$ python summarise_pylint_issues.py pylint_all.json
+Reading pylint_all.json ...
+
+=== CONVENTIONS ===
+Symbol                                   Count
+-------------------------------------------------------
+line-too-long                            802
+use-implicit-booleaness-not-comparison-to-zero 496
+invalid-name                             172
+import-outside-toplevel                  82
+use-implicit-booleaness-not-comparison-to-string 62
+too-many-lines                           59
+superfluous-parens                       30
+wrong-import-position                    26
+unidiomatic-typecheck                    18
+missing-function-docstring               5
+wrong-import-order                       2
+consider-using-dict-items                1
+missing-class-docstring                  1
+useless-import-alias                     1
+ungrouped-imports                        1
+consider-iterating-dictionary            1
+
+=== ERRORS ===
+Symbol                                   Count
+-------------------------------------------------------
+unexpected-keyword-arg                   30663
+bad-plugin-value                         7870
+import-error                             7487
+used-before-assignment                   340
+possibly-used-before-assignment          78
+no-name-in-module                        75
+no-member                                51
+no-value-for-parameter                   36
+too-many-function-args                   19
+not-callable                             16
+unsubscriptable-object                   13
+not-an-iterable                          9
+access-member-before-definition          8
+assignment-from-no-return                8
+undefined-variable                       4
+unsupported-membership-test              3
+missing-kwoa                             2
+undefined-all-variable                   2
+unpacking-non-sequence                   2
+duplicate-bases                          1
+redundant-keyword-arg                    1
+method-hidden                            1
+logging-too-many-args                    1
+
+=== INFOS ===
+Symbol                                   Count
+-------------------------------------------------------
+c-extension-no-member                    24
+
+=== REFACTORS ===
+Symbol                                   Count
+-------------------------------------------------------
+consider-using-assignment-expr           1482
+duplicate-code                           821
+too-many-arguments                       779
+too-many-positional-arguments            704
+too-many-instance-attributes             674
+too-few-public-methods                   440
+too-many-locals                          333
+too-many-branches                        266
+too-many-statements                      186
+consider-using-namedtuple-or-dataclass   158
+too-many-ancestors                       149
+too-many-return-statements               116
+too-many-public-methods                  84
+cyclic-import                            62
+too-many-boolean-expressions             33
+no-else-raise                            31
+no-else-return                           23
+inconsistent-return-statements           9
+useless-return                           8
+property-with-parameters                 8
+consider-using-get                       4
+consider-using-tuple                     2
+consider-using-generator                 2
+use-a-generator                          1
+comparison-with-itself                   1
+
+=== WARNINGS ===
+Symbol                                   Count
+-------------------------------------------------------
+abstract-method                          7984
+unused-argument                          4795
+broad-exception-caught                   520
+protected-access                         155
+attribute-defined-outside-init           40
+unknown-option-value                     36
+unused-import                            26
+redefined-builtin                        21
+arguments-differ                         20
+unspecified-encoding                     19
+comparison-with-callable                 18
+non-parent-init-called                   8
+logging-fstring-interpolation            7
+missing-timeout                          5
+unused-variable                          5
+dangerous-default-value                  4
+try-except-raise                         3
+logging-not-lazy                         3
+invalid-overridden-method                3
+hass-relative-import                     2
+hass-component-root-import               2
+broad-exception-raised                   2
+pointless-statement                      2
+fixme                                    1
+super-init-not-called                    1
+redefined-outer-name                     1
+duplicate-value                          1
+cell-var-from-loop                       1
+duplicate-except                         1
+overridden-final-method                  1
